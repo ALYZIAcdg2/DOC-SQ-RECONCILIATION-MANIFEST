@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIA - Baggage Manifest</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* Ajustements spécifiques pour le Manifest */
+        .sia-logo { 
+            height: 50px; /* Logo plus grand */
+            margin-bottom: 10px;
+        }
+
+        /* Tous les champs en majuscules et police augmentée */
+        input, textarea, select {
+            text-transform: uppercase;
+            font-size: 11px !important;
+            font-weight: bold;
+        }
+
+        /* Centrage spécifique pour les colonnes de Tags */
+        .col-tags textarea, .col-tags input {
+            text-align: center !important;
+        }
+
+        /* Optimisation de l'espace pour tenir sur une page */
+        .main-table th { font-size: 8px; padding: 2px; }
+        .main-table td { height: 30px; }
+    </style>
+</head>
+<body>
+
+<div id="form-to-print" class="container">
+    <div class="header-top">
+        <img src="SQ.png" alt="Singapore Airlines Logo" class="sia-logo">
+    </div>
+
+    <div class="bandeau-gris" style="background-color: #002663; color: #FFCC00; justify-content: space-between; height: 26px; margin-bottom: 2px; border: 1px solid black;">
+        <div style="font-size: 11px; font-weight: bold; padding-left: 5px; display: flex; align-items: center;">
+            BAGGAGE MANIFEST / BAG RETIRE EN PORTE D'EMBARQUEMENT POUR CHARGEMENT EN SOUTE
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; padding-right: 5px; color: white;">
+            <select class="select-vol" style="color: white; background: transparent; border: none; font-size: 11px; font-weight: bold; cursor: pointer;">
+                <option value="SQ335" style="color: black;">SQ335</option>
+                <option value="SQ337" style="color: black;">SQ337</option>
+            </select>
+            <span style="color: white;">/</span>
+            <input type="date" class="input-date-calendar" style="color: white; background: transparent; border: none; font-size: 11px; font-weight: bold; cursor: pointer;">
+        </div>
+    </div>
+
+    <div style="font-size: 8px; line-height: 1.1; margin-bottom: 5px; font-weight: bold; color: black;">
+        1 / ETIQUETTES LIMITED RELEASE : POUR TOUT BAGAGE RETIRE EN SALLE D'EMBARQUEMENT<br>
+        2 / ETIQUETTES SPECIAL DELIVERY : WCHR ET POUSSETTES UNIQUEMENT (LIVRAISON EN PORTE DE L'AVION A L'ARRIVEE)
+    </div>
+
+    <table class="main-table">
+        <thead>
+            <tr style="height: 35px; background-color: #e6e6e6;">
+                <th style="width: 25%;">CUSTOMER NAME(S)</th>
+                <th style="width: 5%;">SOC</th>
+                <th style="width: 25%;">TAG NUMBER(S)</th>
+                <th style="width: 15%;">COCHER SI BAG EN<br>LIMITED RELEASE</th>
+                <th style="width: 15%;">COCHER SI POUSSETTE<br>EN SPECIAL DELIVERY</th>
+                <th style="width: 15%;">COCHER SI WHEELCHAIR EN<br>SPECIAL DELIVERY</th>
+            </tr>
+        </thead>
+        <tbody>
+            <script>
+                for(let i=0; i<10; i++) {
+                    document.write('<tr>' +
+                        '<td><textarea></textarea></td>' +
+                        '<td><input type="text"></td>' +
+                        '<td class="col-tags"><textarea></textarea></td>' +
+                        '<td><input type="checkbox" style="width:18px; height:18px; display:block; margin:auto;"></td>' +
+                        '<td><input type="checkbox" style="width:18px; height:18px; display:block; margin:auto;"></td>' +
+                        '<td><input type="checkbox" style="width:18px; height:18px; display:block; margin:auto;"></td>' +
+                    '</tr>');
+                }
+            </script>
+        </tbody>
+    </table>
+
+    <div style="font-size: 8px; font-weight: bold; margin: 4px 0;">
+        VERIFIER (APRES LE DEPART) QUE LE NUMERO DE TAG ET QUE LE NOMBRE DE PIECE(S) SUPPLEMENTAIRE(S) FIGURENT DANS LE DOSSIER D'ENREGISTREMENT DU PASSAGER
+    </div>
+
+    <div class="bandeau-gris" style="background-color: #002663; color: #FFCC00; justify-content: center; height: 20px; margin-bottom: 0px; border: 1px solid black; font-size: 9px;">
+        RE-ETIQUETAGE AU DELA DE SINGAPOUR POUR TOUT BAGAGE INBOUND MAL ETIQUETE PAR UNE COMPAGNIE PRECEDENTE
+    </div>
+
+    <table class="main-table">
+        <thead>
+            <tr style="font-size: 7.5px; height: 28px; background-color: #e6e6e6;">
+                <th>CUSTOMER NAME(S)</th>
+                <th style="width: 40px;">SOC</th>
+                <th>INBOUND FLIGHT</th>
+                <th style="width: 90px;">DATE</th>
+                <th>FROM</th>
+                <th>OUTBOUND FLIGHT</th>
+                <th style="width: 90px;">DATE</th>
+                <th>TO</th>
+                <th>TAG NUMBER(S)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <script>
+                for(let i=0; i<4; i++) {
+                    document.write('<tr style="height: 28px;">' +
+                        '<td><input type="text"></td>' +
+                        '<td><input type="text"></td>' +
+                        '<td><input type="text"></td>' +
+                        '<td><input type="date" class="input-date-calendar"></td>' +
+                        '<td><input type="text"></td>' +
+                        '<td><input type="text"></td>' +
+                        '<td><input type="date" class="input-date-calendar"></td>' +
+                        '<td><input type="text"></td>' +
+                        '<td class="col-tags"><input type="text"></td>' +
+                    '</tr>');
+                }
+            </script>
+        </tbody>
+    </table>
+
+    <div class="footer-wrap" style="margin-top: 10px; display: flex; justify-content: space-between; align-items: flex-end;">
+        <div class="rev-info" style="font-size: 7px;">
+            HARRY LAZENNEC – SINGAPORE AIRLINES DOCUMENT – CDG STATION – REV. FEB2020
+        </div>
+        <div class="staff-line" style="font-size: 11px;">
+            FORM COMPLETED BY STAFF <input type="text" style="width: 250px; border-bottom: 1px solid black !important; height: 16px; text-align: left;">
+        </div>
+    </div>
+</div>
+
+<div class="no-print" style="text-align: center; margin: 20px 0;">
+    <button onclick="saveAndSend()" class="btn-action">ENREGISTRER PDF & ENVOYER</button>
+</div>
+
+<script>
+async function saveAndSend() {
+    const element = document.getElementById('form-to-print');
+    
+    // Détecter le nom du fichier selon le titre du document
+    const isManifest = document.title.includes("Baggage");
+    const fileName = isManifest ? 'Baggage_Manifest_CDG.pdf' : 'SIA_Reconciliation.pdf';
+
+    const opt = {
+        margin: 0,
+        filename: fileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+    };
+
+    // 1. Générer le PDF en mémoire
+    const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
+
+    // 2. Préparer l'envoi vers Render
+    const formData = new FormData();
+    formData.append('pdf', pdfBlob, fileName);
+    formData.append('to', 'xavier.oliere@alyzia.com');
+    formData.append('subject', isManifest ? 'Baggage Manifest - CDG' : 'Reconciliation / Excess Bag Form - CDG');
+    formData.append('body', 'Veuillez trouver ci-joint le document généré.');
+    formData.append('filename', fileName);
+
+    // 3. Envoyer au serveur (Remplacez par votre URL Render finale)
+const SERVER_URL = "https://doc-sq-reconciliation-manifest.onrender.com/send-pdf";
+
+    try {
+        const response = await fetch(SERVER_URL, { method: 'POST', body: formData });
+        if (response.ok) {
+            alert("Document envoyé avec succès à l'OPS CDG !");
+        } else {
+            alert("Erreur lors de l'envoi.");
+        }
+    } catch (error) {
+        alert("Erreur de connexion au serveur.");
+    }
+}
+</script>
+
+</body>
+</html>

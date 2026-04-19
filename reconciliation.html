@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIA - Reconciliation Form</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* Force le format Paysage et optimise l'espace pour 1 seule page */
+        @page { size: A4 landscape; margin: 0; }
+        
+        .container { 
+            width: 282mm; 
+            padding: 2mm 5mm; 
+            margin: 0 auto;
+            max-height: 195mm;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sia-logo { height: 45px; margin-bottom: 2px; }
+
+        /* En-têtes : Centrage horizontal et vertical identique à l'original */
+        .main-table th { 
+            font-size: 9px !important; 
+            padding: 1px;
+            text-align: center !important;
+            vertical-align: middle;
+            line-height: 1.1;
+            height: 24px;
+            background-color: #e6e6e6;
+            border: 1px solid black !important;
+        }
+
+        /* Lignes du tableau principal compressées */
+        .main-table td { height: 21px; border: 1px solid black !important; }
+        
+        .col-name { width: 16%; }
+        .col-soc { width: 4.5%; }
+        .col-weight { width: 9%; } 
+        .col-reason { width: 17%; }
+
+        input, textarea {
+            text-transform: uppercase;
+            font-size: 11px !important; 
+            font-weight: bold;
+            text-align: center;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        /* BANDEAU CENTRAL AJUSTÉ (Photo 2) */
+        .bandeau-central-original {
+            background-color: #e6e6e6;
+            border: 1px solid black;
+            height: 20px;
+            margin: 5px 0;
+            display: flex;
+            justify-content: center; /* Centre le texte comme l'original */
+            align-items: center;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        /* Sections du bas */
+        .bottom-area { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 4px; 
+            align-items: flex-start;
+        }
+
+        .reconcil-table td { height: 18px; font-size: 10px; border: 1px solid black !important; }
+        
+        .middle-col { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .remarks-table textarea { height: 35px; text-align: left; }
+        .docs-table th { font-size: 9px; padding-left: 5px; text-align: left; background: #e6e6e6; border: 1px solid black !important; }
+        .docs-table td { height: 18px; border: 1px solid black !important; }
+
+        .leader-container { display: flex; align-items: flex-end; }
+        .leader-tag { border: 1px solid black; padding: 2px 10px; font-weight: bold; font-size: 10px; }
+        .leader-fill { border: 1px solid black; border-left: none; width: 140px; height: 18px; }
+
+        .footer-wrap { margin-top: auto; padding-top: 5px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .staff-line { font-size: 11px; font-weight: bold; }
+        .staff-line input { width: 180px; border-bottom: 1px solid black !important; text-align: left; height: 14px; }
+    </style>
+</head>
+<body>
+
+<div id="form-to-print" class="container">
+    <div class="header-top">
+        <img src="SQ.png" alt="Singapore Airlines Logo" class="sia-logo">
+    </div>
+
+    <div class="bandeau-gris" style="border: 1px solid black; background: #e6e6e6; height: 20px; display: flex; justify-content: space-between; align-items: center; padding: 0 10px; margin-bottom: 2px;">
+        <div class="titre-form" style="font-weight: bold; font-size: 10px;">
+            EXCESS BAG WAIVER FORM / 
+            <select class="select-vol" style="background: transparent; border: none; font-weight: bold; font-size: 10px;">
+                <option value="SQ335">SQ335</option>
+                <option value="SQ337">SQ337</option>
+            </select>
+            / CDG-SIN
+        </div>
+        <div class="date-form" style="font-weight: bold; font-size: 10px;">
+            DATE: <input type="date" class="input-date-calendar" style="height: 14px; background: transparent; font-weight: bold; font-size: 10px;">
+        </div>
+    </div>
+
+    <table class="main-table" style="border-collapse: collapse; width: 100%;">
+        <thead>
+            <tr>
+                <th class="col-name">CUSTOMER NAME</th>
+                <th class="col-soc">SOC</th>
+                <th class="col-weight">ENTITLEMENT<br>WEIGHT</th>
+                <th class="col-weight">ACTUAL<br>FOR C/I</th>
+                <th class="col-weight">WEIGHT<br>WAIVED</th>
+                <th class="col-reason">REASON /<br>TCP OR AUTHO</th>
+                <th class="col-name">TCP NAME IF<br>APPLICABLE</th>
+                <th class="col-soc">SOC</th>
+                <th class="col-weight">ENTITLEMENT<br>WEIGHT</th>
+                <th class="col-weight">ACTUAL<br>FOR C/I</th>
+            </tr>
+        </thead>
+        <tbody>
+            <script>
+                for(let i=0; i<13; i++) {
+                    document.write('<tr>' +
+                        '<td><textarea style="resize:none; padding:2px;"></textarea></td>' + 
+                        '<td><input type="text"></td>' +
+                        '<td><input type="number"></td>' + 
+                        '<td><input type="number"></td>' +
+                        '<td><input type="number"></td>' +
+                        '<td><textarea style="resize:none; padding:2px;"></textarea></td>' +
+                        '<td><textarea style="resize:none; padding:2px;"></textarea></td>' +
+                        '<td><input type="text"></td>' +
+                        '<td><input type="number"></td>' +
+                        '<td><input type="number"></td>' +
+                    '</tr>');
+                }
+            </script>
+        </tbody>
+    </table>
+
+    <div class="bandeau-central-original">
+        RECONCILIATION E-TKT   / EMD   / MCO - 
+        <span id="vol-display" style="margin: 0 5px;">SQ335</span> - 
+          CDG-SIN - 
+          A/C REG. : 9VS - 
+        <input type="text" style="width: 50px; text-align: left; margin-left: 5px; font-size: 10px; font-weight: bold; border-bottom: 1px solid black !important; height: 12px;">
+    </div>
+
+    <div class="bottom-area">
+        <table class="reconcil-table" style="width: 25%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: #e6e6e6;"><th>CLASS</th><th>P.O.B</th><th>E-TKT</th><th>FIM</th></tr>
+            </thead>
+            <tbody>
+                <tr><td style="text-align: left; padding-left: 5px; font-weight: bold;">F / SUITE</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+                <tr><td style="text-align: left; padding-left: 5px; font-weight: bold;">J / BUSINESS</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+                <tr><td style="text-align: left; padding-left: 5px; font-weight: bold;">S / PREMIUM</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+                <tr><td style="text-align: left; padding-left: 5px; font-weight: bold;">Y / ECONOMY</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+                <tr><td style="text-align: left; padding-left: 5px; font-weight: bold;">INFANT(S)</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+            </tbody>
+        </table>
+
+        <div class="middle-col">
+            <table class="remarks-table" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+                <tr><th style="background: white; text-align: left; width: 70px; border: 1px solid black; padding-left: 5px; font-size: 9px;">REMARKS</th><td style="border: 1px solid black;"><textarea style="resize:none; text-align: left; padding: 2px;"></textarea></td></tr>
+            </table>
+            <table class="docs-table" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
+                <tr><th>EMD</th><td><input type="text"></td></tr>
+                <tr><th>X BAG PAPER TKT</th><td><input type="text"></td></tr>
+                <tr><th>MISSING DOCUMENT(S)</th><td><input type="text"></td></tr>
+            </table>
+        </div>
+
+        <div class="leader-container">
+            <div class="leader-tag">LEADER</div>
+            <div class="leader-fill"><input type="text" style="text-align: left; padding-left: 5px;"></div>
+        </div>
+    </div>
+
+    <div class="footer-wrap">
+        <div class="rev-info" style="font-size: 6.5px; font-weight: bold;">HARRY LAZENNEC – SINGAPORE AIRLINES DOCUMENT – CDG STATION – REV. FEB2020</div>
+        <div class="staff-line">FORM COMPLETED BY STAFF <input type="text" style="text-align: left;"></div>
+    </div>
+</div>
+
+<div class="no-print" style="text-align: center; margin: 10px 0;">
+    <button onclick="saveAndSend()" class="btn-action" style="padding: 10px 20px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer;">ENREGISTRER PDF & ENVOYER</button>
+</div>
+
+<script>
+    const selectVol = document.querySelector('.select-vol');
+    const volDisplay = document.getElementById('vol-display');
+    selectVol.addEventListener('change', (e) => { volDisplay.textContent = e.target.value; });
+
+async function saveAndSend() {
+    const element = document.getElementById('form-to-print');
+    
+    // Détecter le nom du fichier selon le titre du document
+    const isManifest = document.title.includes("Baggage");
+    const fileName = isManifest ? 'Baggage_Manifest_CDG.pdf' : 'SIA_Reconciliation.pdf';
+
+    const opt = {
+        margin: 0,
+        filename: fileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+    };
+
+    // 1. Générer le PDF en mémoire
+    const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
+
+    // 2. Préparer l'envoi vers Render
+    const formData = new FormData();
+    formData.append('pdf', pdfBlob, fileName);
+    formData.append('to', 'xavier.oliere@alyzia.com');
+    formData.append('subject', isManifest ? 'Baggage Manifest - CDG' : 'Reconciliation / Excess Bag Form - CDG');
+    formData.append('body', 'Veuillez trouver ci-joint le document généré.');
+    formData.append('filename', fileName);
+
+    // 3. Envoyer au serveur (Remplacez par votre URL Render finale)
+    // Remplace par ton vrai lien récupéré sur Render
+const SERVER_URL = "https://doc-sq-reconciliation-manifest.onrender.com/send-pdf";
+
+    try {
+        const response = await fetch(SERVER_URL, { method: 'POST', body: formData });
+        if (response.ok) {
+            alert("Document envoyé avec succès à l'OPS CDG !");
+        } else {
+            alert("Erreur lors de l'envoi.");
+        }
+    } catch (error) {
+        alert("Erreur de connexion au serveur.");
+    }
+}
+</script>
+
+</body>
+</html>
