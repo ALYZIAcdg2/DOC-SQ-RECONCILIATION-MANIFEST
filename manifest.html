@@ -142,41 +142,51 @@
 async function saveAndSend() {
     const element = document.getElementById('form-to-print');
     
-    // Détecter le nom du fichier selon le titre du document
-    const isManifest = document.title.includes("Baggage");
-    const fileName = isManifest ? 'Baggage_Manifest_CDG.pdf' : 'SIA_Reconciliation.pdf';
+    // 1. RÉCUPÉRATION DU VOL ET DE LA DATE POUR LE NOM
+    const flight = document.getElementById('flight-select') ? document.getElementById('flight-select').value : 'SQxxx';
+    const dateBrute = document.getElementById('date-display').innerText; 
+    const dateClean = dateBrute.replace('DATE: ', '').trim(); 
+    
+    const fileName = `BAGAGE MANIFEST_${flight}_${dateClean}.pdf`;
 
     const opt = {
-        margin: 0,
+        margin: [0, 0], 
         filename: fileName,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
+        html2canvas: { 
+            scale: 2, 
+            useCORS: true, 
+            letterRendering: true,
+            scrollY: 0 
+        },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
     };
 
-    // 1. Générer le PDF en mémoire
+    // --- ICI LA FONCTION SAVE() ---
+    // Elle déclenche le téléchargement immédiat sur ton PC/Tablette
+    html2pdf().set(opt).from(element).save();
+
+    // --- PRÉPARATION DU FICHIER POUR LE MAIL ---
     const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
 
-    // 2. Préparer l'envoi vers Render
     const formData = new FormData();
     formData.append('pdf', pdfBlob, fileName);
-    formData.append('to', 'xavier.oliere@alyzia.com');
-    formData.append('subject', isManifest ? 'Baggage Manifest - CDG' : 'Reconciliation / Excess Bag Form - CDG');
-    formData.append('body', 'Veuillez trouver ci-joint le document généré.');
     formData.append('filename', fileName);
-
-    // 3. Envoyer au serveur (Remplacez par votre URL Render finale)
-const SERVER_URL = "https://doc-sq-reconciliation-manifest.onrender.com/send-pdf";
+    formData.append('subject', `BAGAGE MANIFEST- ${flight} - ${dateClean}`);
+    formData.append('body', `Ci-joint le document pour le vol ${flight} du ${dateClean}.`);
 
     try {
-        const response = await fetch(SERVER_URL, { method: 'POST', body: formData });
+        const response = await fetch("/send-pdf", { 
+            method: 'POST', 
+            body: formData 
+        });
         if (response.ok) {
-            alert("Document envoyé avec succès à l'OPS CDG !");
+            alert(`Succès : Document ${fileName} enregistré et envoyé par mail !`);
         } else {
-            alert("Erreur lors de l'envoi.");
+            alert("Enregistré localement, mais erreur lors de l'envoi mail.");
         }
     } catch (error) {
-        alert("Erreur de connexion au serveur.");
+        alert("Enregistré localement, mais erreur réseau pour le mail.");
     }
 }
 </script>

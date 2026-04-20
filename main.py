@@ -24,7 +24,7 @@ async def envoyer_email_sendgrid(pdf_content, filename, subject, body):
 
     payload = {
         "personalizations": [{"to": destinataires}],
-        "from": {"email": "alyzia.cdg2@gmail.com", "name": "SIA - CDG STATION"},
+        "from": {"email": "alyzia.cdg2@gmail.com", "name": "ALYZIA DOCS SQ"},
         "subject": subject,
         "content": [{"type": "text/plain", "value": body}],
         "attachments": [{

@@ -200,7 +200,13 @@
 
 async function saveAndSend() {
     const element = document.getElementById('form-to-print');
-    const fileName = 'SIA_Reconciliation.pdf';
+    
+    // 1. RÉCUPÉRATION DU VOL ET DE LA DATE POUR LE NOM
+    const flight = document.getElementById('flight-select') ? document.getElementById('flight-select').value : 'SQxxx';
+    const dateBrute = document.getElementById('date-display').innerText; 
+    const dateClean = dateBrute.replace('DATE: ', '').trim(); 
+    
+    const fileName = `EXCESS BAG WAIVER_${flight}_${dateClean}.pdf`;
 
     const opt = {
         margin: [0, 0], 
@@ -215,18 +221,18 @@ async function saveAndSend() {
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
     };
 
-    // --- AJOUT : SAUVEGARDE LOCALE SUR L'APPAREIL ---
-    // Cette ligne génère le téléchargement sur ton PC ou ta tablette
+    // --- ICI LA FONCTION SAVE() ---
+    // Elle déclenche le téléchargement immédiat sur ton PC/Tablette
     html2pdf().set(opt).from(element).save();
 
-    // --- LA SUITE RESTE INCHANGÉE POUR L'ENVOI PAR MAIL ---
+    // --- PRÉPARATION DU FICHIER POUR LE MAIL ---
     const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
 
     const formData = new FormData();
     formData.append('pdf', pdfBlob, fileName);
     formData.append('filename', fileName);
-    formData.append('subject', 'RECONCILIATION FORM');
-    formData.append('body', 'Ci-joint le document.');
+    formData.append('subject', `EXCESS BAG WAIVER - ${flight} - ${dateClean}`);
+    formData.append('body', `Ci-joint le document pour le vol ${flight} du ${dateClean}.`);
 
     try {
         const response = await fetch("/send-pdf", { 
@@ -234,12 +240,12 @@ async function saveAndSend() {
             body: formData 
         });
         if (response.ok) {
-            alert("Enregistré sur l'appareil et envoyé avec succès !");
+            alert(`Succès : Document ${fileName} enregistré et envoyé par mail !`);
         } else {
-            alert("Erreur lors de l'envoi par mail.");
+            alert("Enregistré localement, mais erreur lors de l'envoi mail.");
         }
     } catch (error) {
-        alert("Erreur d'envoi réseau.");
+        alert("Enregistré localement, mais erreur réseau pour le mail.");
     }
 }
 </script>
