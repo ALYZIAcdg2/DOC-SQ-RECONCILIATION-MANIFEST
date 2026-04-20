@@ -201,12 +201,22 @@
 async function saveAndSend() {
     const element = document.getElementById('form-to-print');
     
-    // 1. RÉCUPÉRATION DU VOL ET DE LA DATE POUR LE NOM
-    const flight = document.getElementById('flight-select') ? document.getElementById('flight-select').value : 'SQxxx';
-    const dateBrute = document.getElementById('date-display').innerText; 
-    const dateClean = dateBrute.replace('DATE: ', '').trim(); 
+    // 1. RÉCUPÉRATION SÉCURISÉE DU VOL
+    const flightElem = document.getElementById('flight-select');
+    const flight = flightElem ? flightElem.value : 'SQxxx';
     
-    const fileName = `EXCESS BAG WAIVER_${flight}_${dateClean}.pdf`;
+    // 2. RÉCUPÉRATION SÉCURISÉE DE LA DATE
+    const dateElem = document.getElementById('date-display');
+    let dateClean = "00-00-0000";
+    
+    if (dateElem) {
+        dateClean = dateElem.innerText.replace('DATE: ', '').trim();
+    } else {
+        // Si l'ID date-display est introuvable, on met la date du jour par défaut
+        dateClean = new Date().toLocaleDateString('fr-FR').replace(/\//g, '-');
+    }
+    
+    const fileName = `BAGAGE WAIVED EXCESS_${flight}_${dateClean}.pdf`;
 
     const opt = {
         margin: [0, 0], 
