@@ -8,6 +8,7 @@ body {
     background-color: #f4f7f6; 
     margin: 0; 
     padding: 0; 
+    text-transform: uppercase; /* Force les majuscules sur tout le texte statique */
 }
 
 .container { 
@@ -15,81 +16,46 @@ body {
     margin: 0 auto; 
     box-sizing: border-box; 
     width: 297mm; 
-    padding: 10mm 15mm; 
+    padding: 8mm 10mm; /* Réduit légèrement pour éviter les coupures PDF */
 }
 
 /* Header & Logo */
 .header-top { 
     display: flex; 
-    justify-content: flex-end; 
+    justify-content: flex-start; /* Aligné à gauche pour le logo SQ */
     align-items: center; 
     margin-bottom: 5px; 
 }
 
 .sia-logo {
-    height: 32px;
+    height: 40px; /* Taille augmentée pour la netteté */
     width: auto;
-    margin-bottom: 5px;
 }
 
-/* Bandeaux Gris Fins */
+/* Bandeaux Gris */
 .bandeau-gris {
     background-color: var(--bg-gray);
     border: 1px solid black;
     font-weight: bold;
-    font-size: 10px;
-    padding: 2px 10px;
+    font-size: 11px;
+    padding: 4px 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
-    height: 18px;
+    margin-bottom: 5px;
+    height: 25px;
 }
 
-.bandeau-reconcil { 
-    justify-content: center; 
-    margin-top: 10px; 
-}
-
-.select-vol {
-    background: transparent;
+/* Formulaires et Inputs */
+input, select, textarea {
+    text-transform: uppercase !important; /* Force les majuscules en saisie */
     border: none;
-    font-weight: bold;
-    font-family: Arial, sans-serif;
-    font-size: 10px;
     outline: none;
-    cursor: pointer;
-}
-
-/* Zone DATE ajustée pour alignement parfait */
-.date-form {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.input-date-calendar {
-    border: none;
-    background: transparent;
+    background: transparent !important;
     font-family: Arial, sans-serif;
-    font-size: 10px;
     font-weight: bold;
-    color: #000;
-    cursor: pointer;
-    outline: none;
-    padding: 0;
-    margin: 0;
-    height: 14px;
-    display: flex;
-    align-items: center;
-}
-
-.input-reg { 
-    width: 60px; 
-    border: none; 
-    background: transparent; 
-    font-weight: bold; 
-    font-size: 10px; 
+    font-size: 11px;
+    text-align: center;
 }
 
 /* Tableau Principal */
@@ -97,210 +63,138 @@ table {
     width: 100%; 
     border-collapse: collapse; 
     table-layout: fixed; 
+    border: 1px solid black;
 }
 
 th, td { 
-    border: 1px solid black; 
-    font-size: 8.5px; 
-    height: 22px; 
-    word-wrap: break-word; 
-    overflow: hidden; 
+    border: 1px solid black !important; 
+    padding: 0;
+    height: 25px;
 }
 
 th { 
     background-color: var(--bg-gray); 
-    padding: 2px; 
-    line-height: 1.1; 
+    font-size: 9px;
+    line-height: 1.2;
 }
 
-/* Largeurs de colonnes */
-.col-large { width: 18%; }
-.col-narrow { width: 6.5%; }
-.col-left { text-align: left !important; padding-left: 5px; }
-
-input { 
-    border: none; 
-    outline: none; 
-    width: 100%; 
-    height: 100%; 
-    background: transparent; 
-    text-align: center; 
-    font-size: 10px; 
-}
-
-.text-left { 
-    text-align: left !important; 
-    padding-left: 3px; 
-}
-
-/* Bas du document - Polices augmentées */
-.font-large th, .font-large td { 
-    font-size: 11px !important; 
-    height: 25px; 
-}
-
+/* Bas du document */
 .bottom-area { 
     display: flex; 
-    gap: 20px; 
-    margin-top: 15px; 
-    align-items: flex-start; 
+    gap: 10px; 
+    margin-top: 10px; 
+    align-items: stretch; 
 }
 
 .reconcil-table { width: 30%; }
-.col-left-label { text-align: left; padding-left: 8px; font-weight: bold; }
 
 .middle-col { 
     flex: 1; 
     display: flex; 
     flex-direction: column; 
-    gap: 10px; 
-}
-
-.white-th { 
-    background-color: white !important; 
-    text-align: left; 
-    padding-left: 5px; 
-    width: 80px; 
-}
-
-.left-th { 
-    text-align: left; 
-    padding-left: 8px; 
-    background-color: var(--bg-gray); 
-    width: 180px; 
-}
-
-.input-remarks { 
-    height: 45px; 
-    text-align: left; 
-    padding-left: 5px; 
+    gap: 5px; 
 }
 
 .leader-container { 
     display: flex; 
-    align-self: flex-end; 
-    margin-bottom: 5px; 
-}
-
-.leader-tag { 
-    border: 1px solid black; 
-    padding: 3px 15px; 
-    font-weight: bold; 
-    font-size: 11px; 
-}
-
-.leader-fill { 
-    border: 1px solid black; 
-    border-left: none; 
-    width: 180px; 
-    height: 20px; 
+    align-items: center;
+    border: 1px solid black;
+    height: 30px;
+    padding: 0 10px;
+    font-weight: bold;
 }
 
 .footer-wrap { 
-    text-align: right; 
-    margin-top: 20px; 
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 10px;
 }
 
 .staff-line { 
     font-weight: bold; 
-    font-size: 12px; 
-    margin-bottom: 5px; 
+    font-size: 11px; 
 }
 
 .staff-line input { 
     border-bottom: 1px solid black !important; 
-    width: 300px; 
-    height: 18px; 
-    text-align: left; 
+    width: 200px; 
+    text-align: left;
 }
 
 .rev-info { 
-    font-size: 8px; 
+    font-size: 7px; 
     font-weight: bold; 
+    color: #555;
 }
 
+/* --- OPTIMISATION PDF / IMPRESSION --- */
 @media print {
-    @page { size: A4 landscape; margin: 0; }
-    body { background: white; padding: 0; }
-    .container { width: 297mm; height: 210mm; padding: 10mm 15mm; margin: 0; box-shadow: none; }
-    .select-vol { appearance: none; -webkit-appearance: none; }
+    @page { 
+        size: A4 landscape; 
+        margin: 5mm; 
+    }
+    body { background: white; }
+    .no-print { display: none !important; }
+    .container { 
+        width: 100%; 
+        padding: 0; 
+        box-shadow: none; 
+    }
+    /* Empêche les navigateurs de masquer le gris des bandeaux */
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 }
 
-/* Style pour le bouton d'action */
+/* Bouton d'action */
 .btn-action {
     background-color: var(--sia-blue);
     color: white;
-    padding: 12px 24px;
+    padding: 15px 30px;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
-    font-size: 14px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    font-size: 16px;
+    margin: 20px auto;
+    display: block;
 }
 
 .btn-action:hover {
     background-color: #001a44;
 }
 
-/* Cache le bouton lors de l'impression ou de la génération PDF */
-@media print {
-    .no-print {
-        display: none !important;
-    }
-}
-
-/* Rend les textarea invisibles pour garder le design propre */
-textarea {
-    width: 100%;
-    height: 100%;
-    border: none !important; /* Supprime les bordures internes */
-    outline: none !important;
-    background: transparent !important;
-    resize: none !important; /* Supprime l'icône de redimensionnement en bas à droite */
-    font-family: Arial, sans-serif;
-    font-size: 9px;
-    padding: 4px; /* Aligne le texte proprement */
-    box-sizing: border-box;
-    display: block;
-}
-
-/* Supprime les flèches (spinners) des champs numériques pour le PC */
+/* Suppression des flèches (spinners) sur les inputs nombre pour tous les navigateurs */
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; 
+    -webkit-appearance: none; /* Pour Chrome, Safari, Edge */
     margin: 0; 
 }
+
 input[type=number] {
-    -moz-appearance: textfield;
+    -moz-appearance: textfield; /* Pour Firefox */
+    appearance: none;           /* Propriété standard pour la compatibilité future */
 }
 
-/* --- CORRECTIONS POUR LE MANIFEST --- */
-
-/* Rend les champs invisibles pour laisser voir les lignes du tableau */
-.main-table textarea, 
-.main-table input[type="text"] {
-    background: transparent !important;
-    border: none !important;
+/* Correction spécifique pour les Textareas dans les tableaux */
+textarea {
+    resize: none;
+    padding: 5px;
+    display: block;
     width: 100%;
     height: 100%;
-    display: block;
     box-sizing: border-box;
-    padding: 5px;
-    font-size: 10px;
+    overflow: hidden;
 }
 
-/* Centre les cases à cocher et enlève le fond blanc */
-.main-table td input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    margin: auto;
-    display: block;
+@media print {
+    .no-print { display: none; } /* Cache le bouton sur le PDF */
 }
 
-/* Force la transparence même quand on clique dedans */
-textarea:focus, input:focus {
-    outline: none;
-    background: rgba(0, 38, 99, 0.05) !important; /* Très léger bleu au clic */
+.container {
+    width: 280mm;
+    min-height: 190mm; /* S'assure que le fond blanc couvre toute la page A4 paysage */
+    padding: 5mm;
+    margin: 0 auto;
+    background: white;
+    overflow: hidden; /* Empêche les débordements bizarres */
 }
