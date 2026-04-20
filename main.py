@@ -19,7 +19,7 @@ async def envoyer_email_sendgrid(pdf_content, filename, subject, body):
 
     # Liste des destinataires (Modifie l'adresse ici si besoin)
     destinataires = [
-        {"email": "ops_cdg@singaporeair.com.sg"}
+        {"email": "xavier.oliere@alyzia.com"}
     ]
 
     payload = {
@@ -61,14 +61,23 @@ async def send_pdf(
     body: str = Form(...)
 ):
     try:
+        # 1. On lit le contenu binaire du fichier reçu
         pdf_content = await pdf.read()
+        
+        # 2. On vérifie que le fichier n'est pas vide
+        if not pdf_content:
+            return JSONResponse(status_code=400, content={"status": "error", "message": "Fichier PDF vide"})
+
+        # 3. On appelle l'envoi avec le contenu binaire
         success = await envoyer_email_sendgrid(pdf_content, filename, subject, body)
         
         if success:
             return {"status": "success"}
         else:
-            return JSONResponse(status_code=500, content={"status": "error", "message": "SendGrid error"})
+            return JSONResponse(status_code=500, content={"status": "error", "message": "Échec de l'envoi SendGrid"})
+            
     except Exception as e:
+        print(f"Erreur serveur : {e}")
         return JSONResponse(status_code=500, content={"status": "error", "message": str(e)})
 
 # Montage des fichiers statiques (Sert HTML, CSS, Images depuis la racine ".")
