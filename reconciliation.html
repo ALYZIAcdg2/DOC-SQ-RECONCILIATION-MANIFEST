@@ -203,18 +203,23 @@ async function saveAndSend() {
     const fileName = 'SIA_Reconciliation.pdf';
 
     const opt = {
-        margin: [0, 0], // Supprime les marges forcées qui décalent le contenu
+        margin: [0, 0], 
         filename: fileName,
         image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { 
             scale: 2, 
             useCORS: true, 
             letterRendering: true,
-            scrollY: 0 // Force le début de la capture en haut
+            scrollY: 0 
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
     };
 
+    // --- AJOUT : SAUVEGARDE LOCALE SUR L'APPAREIL ---
+    // Cette ligne génère le téléchargement sur ton PC ou ta tablette
+    html2pdf().set(opt).from(element).save();
+
+    // --- LA SUITE RESTE INCHANGÉE POUR L'ENVOI PAR MAIL ---
     const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
 
     const formData = new FormData();
@@ -224,18 +229,17 @@ async function saveAndSend() {
     formData.append('body', 'Ci-joint le document.');
 
     try {
-        // ICI AUSSI : UNIQUEMENT "/send-pdf"
         const response = await fetch("/send-pdf", { 
             method: 'POST', 
             body: formData 
         });
         if (response.ok) {
-            alert("Envoyé avec succès !");
+            alert("Enregistré sur l'appareil et envoyé avec succès !");
         } else {
-            alert("Erreur lors de l'envoi.");
+            alert("Erreur lors de l'envoi par mail.");
         }
     } catch (error) {
-        alert("Erreur d'envoi.");
+        alert("Erreur d'envoi réseau.");
     }
 }
 </script>
