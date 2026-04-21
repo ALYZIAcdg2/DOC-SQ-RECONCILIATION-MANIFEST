@@ -131,22 +131,25 @@
         .footer-ref { position: absolute; right: 20mm; bottom: 12mm; font-size: 10pt; font-weight: bold; }
 
         /* Boutons */
-        .no-print-zone { 
-            display: flex; 
-            justify-content: center; 
-            gap: 20px; 
-            margin: 30px auto; 
-            width: 210mm; 
-        }
-        .btn { 
-            padding: 12px 24px; 
-            border: none; 
-            color: #fff; 
-            font-weight: bold; 
-            cursor: pointer; 
-            border-radius: 4px; 
-            font-size: 11pt;
-        }
+.no-print {
+    display: flex;             /* Active le mode flexible */
+    justify-content: center;   /* Centre horizontalement */
+    align-items: center;       /* Centre verticalement */
+    gap: 20px;                 /* Espace entre les boutons */
+    padding: 20px;             /* Espace autour des boutons */
+    margin-top: 20px;          /* Espace avec le formulaire */
+    width: 100%;               /* Prend toute la largeur pour bien centrer */
+    background: #f0f0f0;       /* Fond gris pour bien voir la zone hors impression */
+}
+
+.no-print button {
+    padding: 12px 25px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    text-transform: uppercase;
+}
         .btn-send { background: #002663; }
         .btn-retour { background: #6c757d; }
         .btn-clear { background: #6c757d; font-size: 9pt; padding: 4px 8px; margin-top: 5px; }
@@ -216,9 +219,10 @@
     </div>
 </div>
 
-<div class="no-print-zone">
-    <button class="btn btn-retour" onclick="window.history.back()">RETOUR</button>
-    <button class="btn btn-send" onclick="saveAndSend()">ENREGISTRER & ENVOYER</button>
+<div class="no-print">
+    <button onclick="window.location.href='index.html'" style="padding: 12px 20px; background: #6c757d; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">RETOUR</button>
+    <button onclick="saveDraft()" style="padding: 12px 20px; background: #ffcc00; color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">💾 SAUVEGARDER BROUILLON</button>
+    <button onclick="saveAndSend()" style="padding: 12px 20px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">ENREGISTRER PDF & ENVOYER</button>
 </div>
 
 <script>
@@ -244,21 +248,8 @@
 
     function clearPad() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-    function saveAndSend() {
-        const element = document.getElementById('pdf-content');
-        const opt = {
-            margin: 0,
-            filename: 'CABIN_UPGRADE_FORM.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        html2pdf().set(opt).from(element).save().then(() => {
-            alert("Form has been saved and is ready for submission.");
-        });
-    }
+    
 </script>
-
+<script src="sia-logic.js"></script>
 </body>
 </html>

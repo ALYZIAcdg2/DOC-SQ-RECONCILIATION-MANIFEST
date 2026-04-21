@@ -55,6 +55,26 @@
         .btn { padding: 10px 22px; border: none; color: #fff; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 10pt; }
         .btn-blue { background: #002663; }
         .btn-gray { background: #6c757d; }
+
+.no-print {
+    display: flex;             /* Active le mode flexible */
+    justify-content: center;   /* Centre horizontalement */
+    align-items: center;       /* Centre verticalement */
+    gap: 20px;                 /* Espace entre les boutons */
+    padding: 20px;             /* Espace autour des boutons */
+    margin-top: 20px;          /* Espace avec le formulaire */
+    width: 100%;               /* Prend toute la largeur pour bien centrer */
+    background: #f0f0f0;       /* Fond gris pour bien voir la zone hors impression */
+}
+
+.no-print button {
+    padding: 12px 25px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    text-transform: uppercase;
+}
     </style>
 </head>
 <body>
@@ -256,9 +276,10 @@
     </div>
 </div>
 
-<div class="controls no-print">
-    <button class="btn btn-gray" onclick="window.history.back()">RETOUR</button>
-    <button class="btn btn-blue" onclick="savePDF()">ENREGISTRER & ENVOYER</button>
+<div class="no-print">
+    <button onclick="window.location.href='index.html'" style="padding: 12px 20px; background: #6c757d; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">RETOUR</button>
+    <button onclick="saveDraft()" style="padding: 12px 20px; background: #ffcc00; color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">💾 SAUVEGARDER</button>
+    <button onclick="saveAndSend()" style="padding: 12px 20px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">ENREGISTRER & ENVOYER</button>
 </div>
 
 <script>
@@ -281,16 +302,7 @@
 
     window.onload = () => { initPad('pad1'); };
 
-    function savePDF() {
-        const element = document.getElementById('pdf-content');
-        html2pdf().set({
-            margin: 0, filename: 'MOBILITY_CHECKLIST.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        }).from(element).save();
-    }
 </script>
-
+<script src="sia-logic.js"></script>
 </body>
 </html>

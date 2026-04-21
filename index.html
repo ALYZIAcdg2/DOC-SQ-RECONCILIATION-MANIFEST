@@ -90,10 +90,45 @@
 
         .btn-scan {
             background: #28a745;
-            grid-column: span 3; /* Le bouton scan prend toute la largeur en bas */
+            grid-column: span 3; 
             margin-top: 10px;
             font-size: 12pt;
         }
+
+        /* Section Brouillons */
+        .draft-container {
+            grid-column: span 3;
+            background: #fffde7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: left;
+            border: 1px solid #ffe082;
+        }
+
+        .draft-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            align-items: center;
+            background: white;
+            margin-bottom: 5px;
+            border-radius: 3px;
+        }
+
+        .draft-info {
+            font-size: 9pt;
+            color: #333;
+        }
+
+        .draft-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-resume { background: #28a745 !important; width: auto !important; padding: 5px 15px !important; margin: 0 !important; font-size: 8pt !important; }
+        .btn-delete { background: #dc3545 !important; width: auto !important; padding: 5px 10px !important; margin: 0 !important; font-size: 8pt !important; }
 
         .footer { 
             margin-top: 30px; 
@@ -101,14 +136,9 @@
             color: #888; 
         }
 
-        /* Adaptabilité mobile */
         @media (max-width: 768px) {
-            .columns-container {
-                grid-template-columns: 1fr;
-            }
-            .btn-scan {
-                grid-column: span 1;
-            }
+            .columns-container { grid-template-columns: 1fr; }
+            .btn-scan, .draft-container { grid-column: span 1; }
         }
     </style>
 </head>
@@ -116,9 +146,7 @@
 <body>
 
 <div class="menu-card">
-
     <img src="SQ.png" alt="SIA Logo" class="logo">
-
     <h2>DOCUMENTS CDG STATION</h2>
     
     <div class="columns-container">
@@ -143,22 +171,69 @@
             <a href="manifest.html" class="btn">BAGGAGE MANIFEST</a>
         </div>
 
+        <div id="draft-section" class="draft-container" style="display:none;">
+            <div class="section-title" style="border-left: 4px solid #fbc02d; color: #f57f17;">📂 Brouillons en attente (Non finalisés)</div>
+            <div id="draft-list"></div>
+        </div>
+
         <label class="btn btn-scan">
             📸 SCAN / PHOTO DOCUMENT
-            <input type="file" accept="image/*" capture="environment" 
-                   style="display:none" onchange="handlePhoto(event)">
+            <input type="file" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(event)">
         </label>
     </div>
 
     <div class="footer">
         SINGAPORE AIRLINES - CDG STATION - 2026
     </div>
-
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
+// --- GESTION DES BROUILLONS ---
+function displayDrafts() {
+    const list = document.getElementById('draft-list');
+    const section = document.getElementById('draft-section');
+    list.innerHTML = "";
+    let found = false;
+
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith("DRAFT_")) {
+            found = true;
+            const draft = JSON.parse(localStorage.getItem(key));
+            const div = document.createElement('div');
+            div.className = "draft-item";
+            div.innerHTML = `
+                <div class="draft-info">
+                    <strong>${key.replace("DRAFT_", "")}</strong><br>
+                    <small>${draft.type} - ${draft.date}</small>
+                </div>
+                <div class="draft-actions">
+                    <button class="btn btn-resume" onclick="resumeDraft('${key}')">REPRENDRE</button>
+                    <button class="btn btn-delete" onclick="deleteDraft('${key}')">X</button>
+                </div>
+            `;
+            list.appendChild(div);
+        }
+    }
+    section.style.display = found ? "block" : "none";
+}
+
+function resumeDraft(key) {
+    const draft = JSON.parse(localStorage.getItem(key));
+    localStorage.setItem("RESUME_DATA", JSON.stringify(draft.data));
+    window.location.href = draft.url;
+}
+
+function deleteDraft(key) {
+    if(confirm("Supprimer ce brouillon ?")) {
+        localStorage.removeItem(key);
+        displayDrafts();
+    }
+}
+
+// --- SCAN PHOTO ---
 async function handlePhoto(event){
     const file = event.target.files[0];
     if(!file) return;
@@ -166,19 +241,14 @@ async function handlePhoto(event){
     img.src = URL.createObjectURL(file);
     img.onload = async function(){
         const container = document.createElement("div");
-        container.style.width = "210mm";
-        container.style.height = "297mm";
-        container.style.display = "flex";
-        container.style.justifyContent = "center";
-        container.style.alignItems = "center";
-        container.style.background = "white";
-        img.style.maxWidth = "100%";
-        img.style.maxHeight = "100%";
+        container.style.width = "210mm"; container.style.height = "297mm";
+        container.style.display = "flex"; container.style.justifyContent = "center";
+        container.style.alignItems = "center"; container.style.background = "white";
+        img.style.maxWidth = "100%"; img.style.maxHeight = "100%";
         container.appendChild(img);
 
         const pdfBlob = await html2pdf().set({
-            margin: 0,
-            filename: "SCAN_DOCUMENT_CDG.pdf",
+            margin: 0, filename: "SCAN_DOCUMENT_CDG.pdf",
             image: { type: "jpeg", quality: 1 },
             html2canvas: { scale: 2, useCORS: true },
             jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
@@ -197,6 +267,8 @@ async function handlePhoto(event){
         } catch(e){ alert("❌ Erreur réseau."); }
     };
 }
+
+window.onload = displayDrafts;
 </script>
 
 </body>

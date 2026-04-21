@@ -58,6 +58,26 @@
 
         .main-table td { height: 30px; }
 
+.no-print {
+    display: flex;             /* Active le mode flexible */
+    justify-content: center;   /* Centre horizontalement */
+    align-items: center;       /* Centre verticalement */
+    gap: 20px;                 /* Espace entre les boutons */
+    padding: 20px;             /* Espace autour des boutons */
+    margin-top: 20px;          /* Espace avec le formulaire */
+    width: 100%;               /* Prend toute la largeur pour bien centrer */
+    background: #f0f0f0;       /* Fond gris pour bien voir la zone hors impression */
+}
+
+.no-print button {
+    padding: 12px 25px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    text-transform: uppercase;
+}
+
     </style>
 
 </head>
@@ -270,82 +290,14 @@
 
 
 
-<div class="no-print" style="text-align: center; margin: 20px 0; display: flex; justify-content: center; gap: 20px;">
-    <button onclick="window.location.href='index.html'" style="padding: 15px 30px; background: #6c757d; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">
-        RETOUR AU MENU
-    </button>
-
-    <button onclick="saveAndSend()" style="padding: 15px 30px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">
-        ENREGISTRER PDF & ENVOYER
-    </button>
+<div class="no-print">
+    <button onclick="window.location.href='index.html'" style="padding: 12px 20px; background: #6c757d; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">RETOUR</button>
+    <button onclick="saveDraft()" style="padding: 12px 20px; background: #ffcc00; color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">💾 SAUVEGARDER</button>
+    <button onclick="saveAndSend()" style="padding: 12px 20px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">ENREGISTRER & ENVOYER</button>
 </div>
 
 
-
-<script>
-async function saveAndSend() {
-    const element = document.getElementById('form-to-print');
-    
-    // 1. RÉCUPÉRATION DU VOL ET DE LA DATE (SANS SUPPRIMER TON HTML)
-    // On utilise querySelector pour trouver les balises par leur classe car elles n'ont pas d'ID
-    const flightElem = document.querySelector('.select-vol');
-    const flight = flightElem ? flightElem.value : 'SQxxx';
-    
-    const dateElem = document.querySelector('.input-date-calendar');
-    let dateClean = '00-00-0000';
-    
-    if (dateElem && dateElem.value) {
-        // Transforme AAAA-MM-JJ en JJ-MM-AAAA
-        dateClean = dateElem.value.split('-').reverse().join('-');
-    } else {
-        // Date du jour par défaut si vide
-        dateClean = new Date().toLocaleDateString('fr-FR').replace(/\//g, '-');
-    }
-    
-    const fileName = `BAGAGE_MANIFEST_${flight}_${dateClean}.pdf`;
-
-    const opt = {
-        margin: [0, 0], 
-        filename: fileName,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-            scale: 2, 
-            useCORS: true, 
-            letterRendering: true,
-            scrollY: 0 
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-    };
-
-    // --- FONCTION SAVE() ---
-    html2pdf().set(opt).from(element).save();
-
-    // --- PRÉPARATION DU FICHIER POUR LE MAIL ---
-    const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
-
-    const formData = new FormData();
-    formData.append('pdf', pdfBlob, fileName);
-    formData.append('filename', fileName);
-    formData.append('subject', `BAGAGE MANIFEST - ${flight} - ${dateClean}`);
-    formData.append('body', `Ci-joint le document pour le vol ${flight} du ${dateClean}.`);
-
-    try {
-        const response = await fetch("/send-pdf", { 
-            method: 'POST', 
-            body: formData 
-        });
-        if (response.ok) {
-            alert(`Succès : Document ${fileName} enregistré et envoyé par mail !`);
-        } else {
-            alert("Enregistré localement, mais erreur lors de l'envoi mail.");
-        }
-    } catch (error) {
-        alert("Enregistré localement, mais erreur réseau pour le mail.");
-    }
-}
-</script>
-
-
+<script src="sia-logic.js"></script>
 
 </body>
 

@@ -159,48 +159,16 @@
     </div>
 </div>
 
-<div class="no-print" style="text-align: center; margin: 20px 0; display: flex; justify-content: center; gap: 20px;">
-    <button onclick="window.location.href='index.html'" style="padding: 15px 30px; background: #6c757d; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">
-        RETOUR AU MENU
-    </button>
-    <button onclick="saveAndSend()" style="padding: 15px 30px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">
-        ENREGISTRER & ENVOYER MAIL
-    </button>
+<div class="no-print">
+    <button onclick="window.location.href='index.html'" style="padding: 12px 20px; background: #6c757d; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">RETOUR</button>
+    <button onclick="saveDraft()" style="padding: 12px 20px; background: #ffcc00; color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">💾 SAUVEGARDER</button>
+    <button onclick="saveAndSend()" style="padding: 12px 20px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">ENREGISTRER & ENVOYER</button>
 </div>
 
 <script>
 document.querySelectorAll('.input-date-calendar').forEach(el => el.valueAsDate = new Date());
 
-async function saveAndSend() {
-    const element = document.getElementById('form-to-print');
-    const flight = document.querySelector('.select-vol').value;
-    const dateInput = document.querySelectorAll('.input-date-calendar')[0].value;
-    const dateVal = dateInput.split('-').reverse().join('-');
-    const fileName = `Transit_Checklist_${flight}_${dateVal}.pdf`;
-
-    const opt = {
-        margin: 0,
-        filename: fileName,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    html2pdf().set(opt).from(element).save();
-
-    const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
-    const formData = new FormData();
-    formData.append('pdf', pdfBlob, fileName);
-    formData.append('filename', fileName);
-    formData.append('subject', `TRANSIT CHECKLIST - ${flight} - ${dateVal}`);
-    formData.append('body', `CI-JOINT LA CHECKLIST DE TRANSIT UMNR POUR LE VOL ${flight} DU ${dateVal}.`);
-
-    try {
-        const response = await fetch("/send-pdf", { method: 'POST', body: formData });
-        if (response.ok) alert("Succès : Enregistré et envoyé à l'OPS !");
-        else alert("Erreur lors de l'envoi mail.");
-    } catch (e) { alert("Erreur réseau."); }
-}
 </script>
+<script src="sia-logic.js"></script>
 </body>
 </html>

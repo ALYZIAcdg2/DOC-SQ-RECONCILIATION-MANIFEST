@@ -307,8 +307,9 @@
 </div>
 
 <div class="no-print">
-    <button class="btn btn-retour" onclick="window.history.back()">RETOUR</button>
-    <button class="btn" onclick="html2pdf().from(document.getElementById('pdf-content')).save()">ENREGISTRER PDF</button>
+    <button onclick="window.location.href='index.html'" style="padding: 12px 20px; background: #6c757d; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">RETOUR</button>
+    <button onclick="saveDraft()" style="padding: 12px 20px; background: #ffcc00; color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">💾 SAUVEGARDER</button>
+    <button onclick="saveAndSend()" style="padding: 12px 20px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">ENREGISTRER & ENVOYER</button>
 </div>
 
 <script>
@@ -327,5 +328,6 @@
     canvas.addEventListener('mousemove', (e) => { if(drawing){ ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } });
     window.addEventListener('mouseup', () => drawing = false);
 </script>
+<script src="sia-logic.js"></script>
 </body>
 </html>

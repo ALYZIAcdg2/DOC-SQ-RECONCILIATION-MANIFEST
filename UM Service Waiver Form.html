@@ -461,62 +461,18 @@ handling his/her own needs.
     <div class="footer-right">CCSD/05/100524</div>
 </div>
 
-<div class="no-print" style="display:flex; justify-content:center; gap:20px;">
-    <button class="btn" style="background:#6c757d;" onclick="window.location.href='index.html'">RETOUR</button>
-    <button class="btn" onclick="saveAndSend()">ENREGISTRER & ENVOYER MAIL</button>
+<div class="no-print">
+    <button onclick="window.location.href='index.html'" style="padding: 12px 20px; background: #6c757d; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">RETOUR</button>
+    <button onclick="saveDraft()" style="padding: 12px 20px; background: #ffcc00; color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">💾 SAUVEGARDER</button>
+    <button onclick="saveAndSend()" style="padding: 12px 20px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">ENREGISTRER & ENVOYER</button>
 </div>
 
+
+<script src="sia-logic.js"></script>
 <script>
-// Initialisation de la date du jour au format ISO pour le champ type="date"
-(function initDateField() {
-    const input = document.getElementById('dateMain');
-    const d = new Date();
-    const day = String(d.getDate()).padStart(2, '0');
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const year = d.getFullYear();
-    input.value = `${year}-${month}-${day}`; 
-})();
-
-// Conversion majuscules
-document.querySelectorAll('input').forEach(input => {
-    input.addEventListener('input', function() {
-        this.value = this.value.toUpperCase();
-    });
-});
-
-async function saveAndSend() {
-    const element = document.getElementById('pdf');
-    const bookingRef = document.getElementById('bookingRef').value || "SANS_REF";
-    const fileName = `UM_Waiver_${bookingRef}.pdf`;
-
-    const opt = {
-        margin: 0,
-        filename: fileName,
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    try {
-        // Sauvegarde locale
-        html2pdf().set(opt).from(element).save();
-
-        // Envoi serveur
-        const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
-        const formData = new FormData();
-        formData.append('pdf', pdfBlob, fileName);
-        formData.append('filename', fileName);
-        formData.append('subject', `UM SERVICE WAIVER FORM - ${bookingRef}`);
-        formData.append('body', `Veuillez trouver ci-joint le formulaire pour le dossier ${bookingRef}.`);
-
-        const response = await fetch('/send-pdf', { method: 'POST', body: formData });
-        if (response.ok) alert("Succès : Formulaire enregistré et envoyé !");
-        else alert("Erreur lors de l'envoi mail.");
-    } catch (e) {
-        alert("Erreur technique lors de la génération.");
-    }
-}
+    // Juste la date ici, tout le reste est dans sia-logic.js
+    const dateField = document.getElementById('date-input');
+    if(dateField) dateField.value = new Date().toISOString().split('T')[0];
 </script>
-
 </body>
 </html>

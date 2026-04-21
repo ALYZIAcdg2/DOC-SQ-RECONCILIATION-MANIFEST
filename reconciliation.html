@@ -3,268 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EXCESS BAGAGE WAIVER</title>
-    <link rel="stylesheet" href="style.css">
+    <title>EXCESS BAGGAGE WAIVER</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        /* Force le format Paysage et optimise l'espace pour 1 seule page */
         @page { size: A4 landscape; margin: 0; }
         
-        .container { 
-            width: 282mm; 
-            padding: 2mm 5mm; 
-            margin: 0 auto;
-            max-height: 195mm;
-            overflow: hidden;
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            background: #f0f0f0; 
+            color: #000; 
+            text-transform: uppercase;
+            height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        .sia-logo { height: 45px; margin-bottom: 2px; }
-
-        /* En-têtes : Centrage horizontal et vertical identique à l'original */
-        .main-table th { 
-            font-size: 9px !important; 
-            padding: 1px;
-            text-align: center !important;
-            vertical-align: middle;
-            line-height: 1.1;
-            height: 24px;
-            background-color: #e6e6e6;
-            border: 1px solid black !important;
+        .container { 
+            width: 282mm; 
+            padding: 2mm 5mm; 
+            margin: 0 auto;
+            background: white;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
         }
 
-        /* Lignes du tableau principal compressées */
-        .main-table td { height: 21px; border: 1px solid black !important; }
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; }
+            .container { box-shadow: none; margin: 0; width: 100%; padding: 2mm 5mm; }
+        }
+
+        .sia-logo { height: 45px; margin-bottom: 2px; }
+
+        /* Tableaux Généraux */
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th, td { border: 1px solid black; vertical-align: middle; padding: 0; }
+        
+        /* Tableau Principal */
+        .main-table { flex-grow: 1; }
+        .main-table th { font-size: 9px; background-color: #e6e6e6; height: 25px; text-align: center; }
         
         .col-name { width: 16%; }
         .col-soc { width: 4.5%; }
         .col-weight { width: 9%; } 
         .col-reason { width: 17%; }
 
-        input, textarea {
+        input, textarea, select {
             text-transform: uppercase;
-            font-size: 11px !important; 
+            font-size: 11px; 
             font-weight: bold;
             text-align: center;
             background: transparent !important;
             border: none !important;
+            width: 100%;
+            height: 100%;
+            outline: none;
+            box-sizing: border-box;
         }
 
-        /* BANDEAU CENTRAL AJUSTÉ (Photo 2) */
-        .bandeau-central-original {
+        .bandeau-central {
             background-color: #e6e6e6;
             border: 1px solid black;
-            height: 20px;
+            height: 24px;
             margin: 5px 0;
             display: flex;
-            justify-content: center; /* Centre le texte comme l'original */
+            justify-content: center; 
             align-items: center;
             font-weight: bold;
             font-size: 10px;
         }
 
-        /* Sections du bas */
+        /* SECTION BAS */
         .bottom-area { 
             display: flex; 
-            gap: 10px; 
-            margin-top: 4px; 
-            align-items: flex-start;
+            gap: 15px; 
+            margin-top: 5px; 
+            align-items: flex-end; /* Aligne le bloc Leader sur le bas des documents */
         }
-
-        .reconcil-table td { height: 18px; font-size: 10px; border: 1px solid black !important; }
         
-        .middle-col { flex: 1; display: flex; flex-direction: column; gap: 4px; }
-        .remarks-table textarea { height: 35px; text-align: left; }
-        .docs-table th { font-size: 9px; padding-left: 5px; text-align: left; background: #e6e6e6; border: 1px solid black !important; }
-        .docs-table td { height: 18px; border: 1px solid black !important; }
+        .reconcil-table { 
+            width: 210px; 
+            min-width: 210px;
+            max-width: 210px;
+        }
+        .reconcil-table th { background: #e6e6e6; font-size: 11px; height: 25px; }
+        .reconcil-table td { height: 22px; font-size: 10px; }
+        .reconcil-table td:first-child { text-align: left; padding-left: 5px; font-weight: bold; width: 90px; }
+        .reconcil-table th:nth-child(n+2), .reconcil-table td:nth-child(n+2) { width: 40px; }
 
-        .leader-container { display: flex; align-items: flex-end; }
-        .leader-tag { border: 1px solid black; padding: 2px 10px; font-weight: bold; font-size: 10px; }
-        .leader-fill { border: 1px solid black; border-left: none; width: 140px; height: 18px; }
+        .middle-col { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+        
+        .remarks-table th { background: #fff; text-align: left; padding-left: 5px; height: 20px; font-size: 10px; border-bottom: none; }
+        .remarks-table td { border: 1px solid black; }
 
-        .footer-wrap { margin-top: auto; padding-top: 5px; display: flex; justify-content: space-between; align-items: flex-end; }
+        .docs-table { width: 300px; }
+        .docs-table th { background: #e6e6e6; text-align: left; padding-left: 5px; font-size: 10px; width: 150px; height: 22px; }
+        .docs-table td { height: 22px; width: 150px; }
+
+        /* CASE LEADER TYPE PHOTO 1 */
+        .leader-table {
+            width: 250px;
+            border: 1px solid black;
+            background: white;
+        }
+        .leader-table td { border: 1px solid black; height: 22px; }
+        .leader-label { width: 60px; font-weight: bold; font-size: 10px; text-align: center; }
+        .leader-input-cell { padding: 0 5px; }
+        .leader-input-cell input { text-align: left; font-size: 11px; }
+
+        /* FOOTER CORRECT (Photo 2) */
+        .footer-wrap { 
+            margin-top: 5px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-end; 
+            gap: 2px; 
+        }
         .staff-line { font-size: 11px; font-weight: bold; }
-        .staff-line input { width: 180px; border-bottom: 1px solid black !important; text-align: left; height: 14px; }
+        .staff-line input { width: 200px; border-bottom: 1px solid black !important; height: 18px; text-align: left; }
+        .rev-info { font-size: 8px; font-weight: bold; }
+
+        .no-print { text-align: center; padding: 15px; display: flex; justify-content: center; gap: 20px; background: #f0f0f0; }
     </style>
 </head>
 <body>
 
 <div id="form-to-print" class="container">
     <div class="header-top">
-        <img src="SQ.png" alt="Singapore Airlines Logo" class="sia-logo">
+        <img src="SQ.png" alt="SIA Logo" class="sia-logo">
     </div>
 
-    <div class="bandeau-gris" style="border: 1px solid black; background: #e6e6e6; height: 20px; display: flex; justify-content: space-between; align-items: center; padding: 0 10px; margin-bottom: 2px;">
-        <div class="titre-form" style="font-weight: bold; font-size: 10px;">
+    <div class="bandeau-gris" style="border: 1px solid black; background: #e6e6e6; height: 22px; display: flex; justify-content: space-between; align-items: center; padding: 0 10px; margin-bottom: 2px;">
+        <div style="font-weight: bold; font-size: 10px;">
             EXCESS BAG WAIVER FORM / 
-            <select class="select-vol" style="background: transparent; border: none; font-weight: bold; font-size: 10px;">
+            <select id="flight-select" style="width: auto; background: none;">
                 <option value="SQ335">SQ335</option>
                 <option value="SQ337">SQ337</option>
-            </select>
-            / CDG-SIN
+            </select> / CDG-SIN
         </div>
-        <div class="date-form" style="font-weight: bold; font-size: 10px;">
-            DATE: <input type="date" class="input-date-calendar" style="height: 14px; background: transparent; font-weight: bold; font-size: 10px;">
+        <div style="font-weight: bold; font-size: 10px;">
+            DATE: <input type="date" id="date-input" style="height: 16px; width: auto;">
         </div>
     </div>
 
-    <table class="main-table" style="border-collapse: collapse; width: 100%;">
+    <table class="main-table">
         <thead>
             <tr>
                 <th class="col-name">CUSTOMER NAME</th>
                 <th class="col-soc">SOC</th>
-                <th class="col-weight">ENTITLEMENT<br>WEIGHT</th>
-                <th class="col-weight">ACTUAL<br>FOR C/I</th>
-                <th class="col-weight">WEIGHT<br>WAIVED</th>
-                <th class="col-reason">REASON /<br>TCP OR AUTHO</th>
-                <th class="col-name">TCP NAME IF<br>APPLICABLE</th>
+                <th class="col-weight">ENTITLEMENT WEIGHT</th>
+                <th class="col-weight">ACTUAL FOR C/I</th>
+                <th class="col-weight">WEIGHT WAIVED</th>
+                <th class="col-reason">REASON / TCP OR AUTHO</th>
+                <th class="col-name">TCP NAME IF APPLICABLE</th>
                 <th class="col-soc">SOC</th>
-                <th class="col-weight">ENTITLEMENT<br>WEIGHT</th>
-                <th class="col-weight">ACTUAL<br>FOR C/I</th>
+                <th class="col-weight">ENTITLEMENT WEIGHT</th>
+                <th class="col-weight">ACTUAL FOR C/I</th>
             </tr>
         </thead>
-        <tbody>
-            <script>
-                for(let i=0; i<13; i++) {
-                    document.write('<tr>' +
-                        '<td><textarea style="resize:none; padding:2px;"></textarea></td>' + 
-                        '<td><input type="text"></td>' +
-                        '<td><input type="number"></td>' + 
-                        '<td><input type="number"></td>' +
-                        '<td><input type="number"></td>' +
-                        '<td><textarea style="resize:none; padding:2px;"></textarea></td>' +
-                        '<td><textarea style="resize:none; padding:2px;"></textarea></td>' +
-                        '<td><input type="text"></td>' +
-                        '<td><input type="number"></td>' +
-                        '<td><input type="number"></td>' +
-                    '</tr>');
-                }
-            </script>
-        </tbody>
+        <tbody id="main-tbody"></tbody>
     </table>
 
-    <div class="bandeau-central-original">
-        RECONCILIATION E-TKT   / EMD   / MCO - 
-        <span id="vol-display" style="margin: 0 5px;">SQ335</span> - 
-          CDG-SIN - 
-          A/C REG. : 9VS - 
-        <input type="text" style="width: 50px; text-align: left; margin-left: 5px; font-size: 10px; font-weight: bold; border-bottom: 1px solid black !important; height: 12px;">
+    <div class="bandeau-central">
+        RECONCILIATION E-TKT / EMD / MCO - <span id="vol-display">SQ335</span> - CDG-SIN - A/C REG. : 9VS - 
+        <input type="text" id="ac-reg" style="width: 60px; border-bottom: 1px solid black !important; height: 14px; margin-left: 5px;">
     </div>
 
     <div class="bottom-area">
-        <table class="reconcil-table" style="width: 25%; border-collapse: collapse;">
+        <table class="reconcil-table">
             <thead>
-                <tr style="background: #e6e6e6;"><th>CLASS</th><th>P.O.B</th><th>E-TKT</th><th>FIM</th></tr>
+                <tr><th>CLASS</th><th>P.O.B</th><th>E-TKT</th><th>FIM</th></tr>
             </thead>
             <tbody>
-                <tr><td style="text-align: left; padding-left: 5px; font-weight: bold;">F / SUITE</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
-                <tr><td style="text-align: left; padding-left: 5px; font-weight: bold;">J / BUSINESS</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
-                <tr><td style="text-align: left; padding-left: 5px; font-weight: bold;">S / PREMIUM</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
-                <tr><td style="text-align: left; padding-left: 5px; font-weight: bold;">Y / ECONOMY</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
-                <tr><td style="text-align: left; padding-left: 5px; font-weight: bold;">INFANT(S)</td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+                <tr><td>F / SUITE</td><td><input type="number" id="pob-f"></td><td><input type="number" id="etkt-f"></td><td><input type="number" id="fim-f"></td></tr>
+                <tr><td>J / BUSINESS</td><td><input type="number" id="pob-j"></td><td><input type="number" id="etkt-j"></td><td><input type="number" id="fim-j"></td></tr>
+                <tr><td>S / PREMIUM</td><td><input type="number" id="pob-s"></td><td><input type="number" id="etkt-s"></td><td><input type="number" id="fim-s"></td></tr>
+                <tr><td>Y / ECONOMY</td><td><input type="number" id="pob-y"></td><td><input type="number" id="etkt-y"></td><td><input type="number" id="fim-y"></td></tr>
+                <tr><td>INFANT(S)</td><td><input type="number" id="pob-inf"></td><td><input type="number" id="etkt-inf"></td><td><input type="number" id="fim-inf"></td></tr>
             </tbody>
         </table>
 
         <div class="middle-col">
-            <table class="remarks-table" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
-                <tr><th style="background: white; text-align: left; width: 70px; border: 1px solid black; padding-left: 5px; font-size: 9px;">REMARKS</th><td style="border: 1px solid black;"><textarea style="resize:none; text-align: left; padding: 2px;"></textarea></td></tr>
+            <table class="remarks-table">
+                <tr><th>REMARKS</th></tr>
+                <tr><td><textarea id="remarks-main" style="height: 55px; padding: 5px; text-align: left;"></textarea></td></tr>
             </table>
-            <table class="docs-table" style="width: 100%; border-collapse: collapse; border: 1px solid black;">
-                <tr><th>EMD</th><td><input type="text"></td></tr>
-                <tr><th>X BAG PAPER TKT</th><td><input type="text"></td></tr>
-                <tr><th>MISSING DOCUMENT(S)</th><td><input type="text"></td></tr>
+            
+            <table class="docs-table">
+                <tr><th>EMD</th><td><input type="text" id="doc-emd"></td></tr>
+                <tr><th>X BAG PAPER TKT</th><td><input type="text" id="doc-paper"></td></tr>
+                <tr><th>MISSING DOCUMENT(S)</th><td><input type="text" id="doc-missing"></td></tr>
             </table>
         </div>
 
-        <div class="leader-container">
-            <div class="leader-tag">LEADER</div>
-            <div class="leader-fill"><input type="text" style="text-align: left; padding-left: 5px;"></div>
-        </div>
+        <table class="leader-table">
+            <tr>
+                <td class="leader-label">LEADER</td>
+                <td class="leader-input-cell"><input type="text" id="leader-name"></td>
+            </tr>
+        </table>
     </div>
 
     <div class="footer-wrap">
-        <div class="rev-info" style="font-size: 6.5px; font-weight: bold;">HARRY LAZENNEC – SINGAPORE AIRLINES DOCUMENT – CDG STATION – REV. FEB2020</div>
-        <div class="staff-line">FORM COMPLETED BY STAFF <input type="text" style="text-align: left;"></div>
+        <div class="staff-line">FORM COMPLETED BY STAFF <input type="text" id="staff-name"></div>
+        <div class="rev-info">HARRY LAZENNEC – SINGAPORE AIRLINES DOCUMENT – CDG STATION – REV. FEB2020</div>
     </div>
 </div>
 
-<div class="no-print" style="text-align: center; margin: 20px 0; display: flex; justify-content: center; gap: 20px;">
-    <button onclick="window.location.href='index.html'" style="padding: 15px 30px; background: #6c757d; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">
-        RETOUR AU MENU
-    </button>
-
-    <button onclick="saveAndSend()" style="padding: 15px 30px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">
-        ENREGISTRER PDF & ENVOYER
-    </button>
+<div class="no-print">
+    <button onclick="window.location.href='index.html'" style="padding: 12px 20px; background: #6c757d; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">RETOUR</button>
+    <button onclick="saveDraft()" style="padding: 12px 20px; background: #ffcc00; color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">💾 SAUVEGARDER BROUILLON</button>
+    <button onclick="saveAndSend()" style="padding: 12px 20px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">ENREGISTRER PDF & ENVOYER</button>
 </div>
 
 <script>
-    const selectVol = document.querySelector('.select-vol');
+    const tbody = document.getElementById('main-tbody');
+    for(let i=0; i<13; i++) {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" id="row-${i}-name"></td><td><input type="text" id="row-${i}-soc1"></td>
+            <td><input type="number" id="row-${i}-ent1"></td><td><input type="number" id="row-${i}-act1"></td>
+            <td><input type="number" id="row-${i}-waiv"></td><td><input type="text" id="row-${i}-reason"></td>
+            <td><input type="text" id="row-${i}-tcp"></td><td><input type="text" id="row-${i}-soc2"></td>
+            <td><input type="number" id="row-${i}-ent2"></td><td><input type="number" id="row-${i}-act2"></td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    const selectVol = document.getElementById('flight-select');
     const volDisplay = document.getElementById('vol-display');
     selectVol.addEventListener('change', (e) => { volDisplay.textContent = e.target.value; });
 
-async function saveAndSend() {
-    const element = document.getElementById('form-to-print');
-    
-    // 1. RÉCUPÉRATION SÉCURISÉE DU VOL
-    const flightElem = document.getElementById('flight-select');
-    const flight = flightElem ? flightElem.value : 'SQxxx';
-    
-    // 2. RÉCUPÉRATION SÉCURISÉE DE LA DATE
-    const dateElem = document.getElementById('date-display');
-    let dateClean = "00-00-0000";
-    
-    if (dateElem) {
-        dateClean = dateElem.innerText.replace('DATE: ', '').trim();
-    } else {
-        // Si l'ID date-display est introuvable, on met la date du jour par défaut
-        dateClean = new Date().toLocaleDateString('fr-FR').replace(/\//g, '-');
-    }
-    
-    const fileName = `BAGAGE WAIVED EXCESS_${flight}_${dateClean}.pdf`;
-
-    const opt = {
-        margin: [0, 0], 
-        filename: fileName,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-            scale: 2, 
-            useCORS: true, 
-            letterRendering: true,
-            scrollY: 0 
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-    };
-
-    // --- ICI LA FONCTION SAVE() ---
-    // Elle déclenche le téléchargement immédiat sur ton PC/Tablette
-    html2pdf().set(opt).from(element).save();
-
-    // --- PRÉPARATION DU FICHIER POUR LE MAIL ---
-    const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
-
-    const formData = new FormData();
-    formData.append('pdf', pdfBlob, fileName);
-    formData.append('filename', fileName);
-    formData.append('subject', `EXCESS BAG WAIVER - ${flight} - ${dateClean}`);
-    formData.append('body', `Ci-joint le document pour le vol ${flight} du ${dateClean}.`);
-
-    try {
-        const response = await fetch("/send-pdf", { 
-            method: 'POST', 
-            body: formData 
+    function autoSave() {
+        const formData = {};
+        document.querySelectorAll('input, select, textarea').forEach(el => {
+            if (el.id) formData[el.id] = (el.type === 'checkbox' || el.type === 'radio') ? el.checked : el.value;
         });
-        if (response.ok) {
-            alert(`Succès : Document ${fileName} enregistré et envoyé par mail !`);
-        } else {
-            alert("Enregistré localement, mais erreur lors de l'envoi mail.");
-        }
-    } catch (error) {
-        alert("Enregistré localement, mais erreur réseau pour le mail.");
+        localStorage.setItem(window.location.pathname, JSON.stringify(formData));
     }
-}
-</script>
 
+    function loadSavedData() {
+        const resumeData = localStorage.getItem("RESUME_DATA");
+        const autoSavedData = localStorage.getItem(window.location.pathname);
+        const data = resumeData ? JSON.parse(resumeData) : (autoSavedData ? JSON.parse(autoSavedData) : null);
+        if (data) {
+            Object.keys(data).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (el.type === 'checkbox' || el.type === 'radio') el.checked = data[id];
+                    else el.value = data[id];
+                }
+            });
+            if (resumeData) localStorage.removeItem("RESUME_DATA");
+            volDisplay.textContent = selectVol.value;
+        }
+    }
+
+    function saveDraft() {
+        const flight = selectVol.value;
+        const date = document.getElementById('date-input').value || "SANS-DATE";
+        const draftID = `DRAFT_EXCESS_BAG_${flight}_${date}`;
+        if (localStorage.getItem(draftID)) {
+            if (!confirm(`Un brouillon existe déjà pour ce vol.\nÉcraser ?`)) return;
+        }
+        const formData = {};
+        document.querySelectorAll('input, select, textarea').forEach(el => { if(el.id) formData[el.id] = el.value; });
+        localStorage.setItem(draftID, JSON.stringify({ type: "EXCESS BAG WAIVER", url: window.location.pathname, date: new Date().toLocaleString(), data: formData }));
+        alert("Brouillon sauvegardé !");
+    }
+
+    window.onload = loadSavedData;
+    document.addEventListener('input', autoSave);
+
+    async function saveAndSend() {
+        const element = document.getElementById('form-to-print');
+        const flight = selectVol.value;
+        const dateInput = document.getElementById('date-input').value || "SANS-DATE";
+        const fileName = `BAGAGE_WAIVED_EXCESS_${flight}_${dateInput}.pdf`;
+        const opt = { margin: 0, filename: fileName, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } };
+
+        html2pdf().set(opt).from(element).save();
+        const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
+        const formData = new FormData();
+        formData.append('pdf', pdfBlob, fileName);
+        formData.append('filename', fileName);
+        formData.append('subject', `EXCESS BAG WAIVER - ${flight} - ${dateInput}`);
+        formData.append('body', `Document joint.`);
+
+        try {
+            const response = await fetch("/send-pdf", { method: 'POST', body: formData });
+            if (response.ok) {
+                alert(`Succès !`);
+                localStorage.removeItem(window.location.pathname);
+                localStorage.removeItem(`DRAFT_EXCESS_BAG_${flight}_${dateInput}`);
+                window.location.href = 'index.html';
+            } else { alert("Erreur mail."); }
+        } catch (e) { alert("Erreur réseau."); }
+    }
+</script>
+<script src="sia-logic.js"></script>
 </body>
 </html>
