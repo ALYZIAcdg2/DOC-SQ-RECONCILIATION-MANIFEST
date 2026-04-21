@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UM Service Waiver</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+@page { size: A4 portrait; margin: 0; }
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin:0;
+    background:#eaeaea;
+    color:#000;
+}
+
+/* FEUILLE A4 */
+.page{
+    width:210mm;
+    min-height:297mm;
+    margin:20px auto;
+    padding:12mm 14mm 14mm 14mm;
+    background:#fff;
+    box-sizing:border-box;
+    position:relative;
+    border:1px solid #aaa;
+    box-shadow:0 0 10px rgba(0,0,0,0.2);
+}
+
+@media print{
+    body{ background:#fff; }
+    .page{
+        border:none;
+        box-shadow:none;
+        margin:0 auto;
+    }
+    .no-print{
+        display:none !important;
+    }
+}
+
+/* HEADER */
+.header{
+    position:relative;
+    min-height:15mm;
+    margin-bottom:4mm;
+}
+
+.logo{
+    position:absolute;
+    right:0;
+    top:0;
+    height:13mm;
+    object-fit:contain;
+}
+
+.title{
+    text-align:center;
+    font-size:28pt;
+    font-weight:bold;
+    margin-top:6mm; 
+}
+
+.subtitle{
+    text-align:center;
+    font-size:11pt;
+    margin-top:2mm;
+    margin-bottom:1mm;
+}
+
+/* TOP */
+.to-line{
+    margin-top:2mm; 
+    font-weight:bold;
+}
+
+.meta-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:16mm;
+    margin-top:5mm;
+    margin-bottom:5mm;
+}
+
+.meta-block{
+    display:flex;
+    align-items:flex-end;
+    gap:8px;
+    flex:1;
+}
+
+.meta-block label{
+    font-size:10pt;
+    font-weight:700;
+    white-space:nowrap;
+}
+
+/* INPUTS */
+.input{
+    border:none;
+    border-bottom:2px solid black;
+    background:#dbe3f3; 
+    height:20px;
+    padding:2px 4px;
+    font-size:12px;
+    width:220px;
+    box-sizing:border-box;
+    outline:none;
+}
+
+.input-booking{
+    width:220px;
+}
+
+/* TABLE SECTIONS */
+.section{
+    border:1px solid #000;
+    margin-top:0;
+}
+
+.section + .section{
+    margin-top:0;
+    border-top:none;
+}
+
+.section-title{
+    padding:1.6mm 2.2mm;
+    font-size:10pt;
+    font-weight:700;
+    border-bottom:1px solid #000;
+    text-transform:uppercase;
+    background:#f2f2f2; 
+}
+
+.section table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+}
+
+.section td,
+.section th{
+    border:1px solid #000;
+    padding:1.5mm 1.8mm;
+    vertical-align:middle;
+    font-size:9pt;
+}
+
+.section th{
+    font-weight:700;
+    text-align:center;
+    background:#fff;
+}
+
+.no-outer-top td,
+.no-outer-top th{
+    border-top:none;
+}
+
+.no-outer-left td:first-child,
+.no-outer-left th:first-child{
+    border-left:none;
+}
+
+.no-outer-right td:last-child,
+.no-outer-right th:last-child{
+    border-right:none;
+}
+
+.no-outer-bottom tr:last-child td,
+.no-outer-bottom tr:last-child th{
+    border-bottom:none;
+}
+
+.label-cell{
+    font-size:8.8pt;
+    white-space:nowrap;
+}
+
+.cell-input,
+.cell-date{
+    width:100%;
+    border:none;
+    border-bottom:1px solid #000;
+    background:#dbe3f3; 
+    height:18px;
+    box-sizing:border-box;
+    font-family:Arial;
+    font-size:9pt;
+    font-weight:bold; 
+    outline:none;
+    padding:0 4px;
+}
+
+.note-row{
+    font-size:8.4pt !important;
+    line-height:1.15;
+    padding:1.8mm 2.2mm !important;
+}
+
+/* LEGAL */
+.legal{
+    margin-top:6mm;
+    font-size:10.4pt;
+    line-height:1.26;
+    text-align:justify;
+}
+
+.legal p{
+    margin:0 0 6mm 0;
+}
+
+/* LINKS LOOK */
+.fake-link{
+    color:#1155cc;
+    text-decoration:underline;
+}
+
+/* SIGNATURE */
+.signature{
+    margin-top:8mm;
+}
+
+.sig-line{
+    width:85mm;
+    border-top:1px solid #000;
+    margin-left:0;
+    padding-top:3mm;
+    text-align:center;
+    font-size:10pt;
+}
+
+/* FOOTERS */
+.footer-left{
+    margin-top:8mm;
+    font-size:8.4pt;
+    font-style:italic;
+    line-height:1.2;
+}
+
+.footer-right{
+    position:absolute;
+    right:14mm;
+    bottom:8mm;
+    font-size:8.5pt;
+}
+
+.no-print{
+    text-align:center;
+    margin:20px 0 30px;
+}
+
+.btn{
+    padding:12px 24px;
+    border:none;
+    background:#002663;
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+}
+
+input{
+    text-transform: uppercase;
+    font-weight:bold;
+}
+
+.section td{
+    background:#fff; 
+}
+
+.section td input{
+    margin-top:2px;
+}
+
+.logo-group{
+    position:absolute;
+    right:0;
+    top:0;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.logo-scoot{ height:11mm; }
+.logo-sq{ height:13mm; }
+
+</style>
+</head>
+<body>
+
+<div id="pdf" class="page">
+
+    <div class="header">
+        <div class="logo-group">
+            <img src="SCOOT.PNG" class="logo-scoot">
+            <img src="SQ2.PNG" class="logo-sq">
+        </div>
+        <div class="title">WAIVER</div>
+        <div class="subtitle">(For UM between 12 and under 18 years old ONLY)</div>
+    </div>
+
+    <div class="to-line">
+        To: Singapore Airlines Limited / Scoot Pte. Ltd.
+    </div>
+
+    <div class="meta-row">
+        <div class="meta-block">
+            <label>Date:</label>
+            <input type="date" id="dateMain" class="input">
+        </div>
+
+        <div class="meta-block" style="justify-content:flex-end;">
+            <label>Booking Reference:</label>
+            <input id="bookingRef" type="text" class="input input-booking">
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">UNACCOMPANIED MINOR’S PERSONAL PARTICULARS</div>
+        <table class="no-outer-top no-outer-left no-outer-right no-outer-bottom">
+            <tr>
+                <td colspan="2" class="label-cell">
+                    Name:<br>
+                    <input type="text" class="cell-input">
+                </td>
+            </tr>
+            <tr>
+                <td class="label-cell" style="width:45%;">
+                    Date of Birth:<br>
+                    <input type="date" class="cell-date">
+                </td>
+                <td class="label-cell" style="width:55%;">
+                    Passport Number:<br>
+                    <input type="text" class="cell-input">
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">FLIGHT SECTORS TO BE WAIVED FOR UM ASSISTANCE &amp; HANDLING</div>
+        <table class="no-outer-top no-outer-left no-outer-right no-outer-bottom">
+            <tr>
+                <th style="width:30%;">Flight Number</th>
+                <th style="width:20%;">Date</th>
+                <th style="width:25%;">From</th>
+                <th style="width:25%;">To</th>
+            </tr>
+            <tr>
+                <td><input type="text" class="cell-input"></td>
+                <td><input type="date" class="cell-date"></td>
+                <td><input type="text" class="cell-input"></td>
+                <td><input type="text" class="cell-input"></td>
+            </tr>
+            <tr>
+                <td><input type="text" class="cell-input"></td>
+                <td><input type="date" class="cell-date"></td>
+                <td><input type="text" class="cell-input"></td>
+                <td><input type="text" class="cell-input"></td>
+            </tr>
+            <tr>
+                <td><input type="text" class="cell-input"></td>
+                <td><input type="date" class="cell-date"></td>
+                <td><input type="text" class="cell-input"></td>
+                <td><input type="text" class="cell-input"></td>
+            </tr>
+            <tr>
+                <td colspan="4" class="note-row">
+                    Note: Waiver for UM assistance and handling must be for all flights in the entire journey operated by Singapore Airlines, Scoot or both. If UM assistance and handling is required for one flight sector in the journey, UM assistance &amp; handling must be provided for all the flight sectors in the entire journey.
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <div class="section-title">UM’S PARENT/LEGAL GUARDIAN’S PARTICULARS</div>
+        <table class="no-outer-top no-outer-left no-outer-right no-outer-bottom">
+            <tr>
+                <td class="label-cell" style="width:37%;">
+                    Surname:<br>
+                    <input type="text" class="cell-input">
+                </td>
+                <td class="label-cell" style="width:63%;">
+                    Given Name:<br>
+                    <input type="text" class="cell-input">
+                </td>
+            </tr>
+            <tr>
+                <td class="label-cell">
+                    Relationship to the Minor:<br>
+                    <input type="text" class="cell-input">
+                </td>
+                <td class="label-cell">
+                    Identification Document / Passport No.:<br>
+                    <input type="text" class="cell-input">
+                </td>
+            </tr>
+            <tr>
+                <td class="label-cell">
+                    Contact Number:<br>
+                    <input type="text" class="cell-input">
+                </td>
+                <td class="label-cell">
+                    Country of Residence:<br>
+                    <input type="text" class="cell-input">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="label-cell">
+                    Home Address:<br>
+                    <input type="text" class="cell-input">
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="legal">
+<p style="font-weight:bold;">
+I declare that the above-named unaccompanied minor (“UM”) is my son / daughter / a child* under my guardianship.
+I hereby instruct you that (1) you do not have to assist the abovementioned UM on the ground and during the entire
+journey on the above flight/sector(s) operated by Singapore Airlines/Scoot and that (2) you do not have to provide
+the abovementioned UM with any special seating arrangements; because he/she is fully and entirely capable of
+handling his/her own needs.
+</p>
+
+        <p>
+            I hereby revoke and nullify any previous request for UM Service, assistance or handling, made at the time of reservations or
+            prior to this change of instruction and this instruction shall prevail for the above stated duration on the ground and during the
+            flights (as the case may be).
+        </p>
+
+        <p>
+            I hereby declare that the details furnished, and information provided are true, complete and correct. I understand that
+            Singapore Airlines/Scoot is under no obligation to carry out any steps to validate the authenticity of this waiver and the contents
+            of this document, and that it is entitled to rely on this document to waive any obligations to assist the abovementioned UM.
+        </p>
+
+        <p style="margin-bottom:0;">
+            By completing this form, I agree and acknowledge that any personal data will be processed by Singapore Airlines/Scoot (as
+            the case may be) for the purposes of handling my request in relation to my unaccompanied minor(s). Processing of any
+            personal data is made in accordance with Singapore Airlines' and Scoot’s Privacy Policy, available on
+            <span class="fake-link">www.singaporeair.com</span>
+            and
+            <span class="fake-link">www.flyscoot.com</span>
+            respectively.
+        </p>
+    </div>
+
+    <div class="signature">
+        <div class="sig-line">Signature of Parent/Guardian*</div>
+    </div>
+
+    <div class="footer-left">
+        * Delete as necessary.<br>
+        **The UM shall retain a copy of this completed form as a reference for Singapore Airlines/Scoot during his/her entire duration of travel.
+    </div>
+
+    <div class="footer-right">CCSD/05/100524</div>
+</div>
+
+<div class="no-print" style="display:flex; justify-content:center; gap:20px;">
+    <button class="btn" style="background:#6c757d;" onclick="window.location.href='index.html'">RETOUR</button>
+    <button class="btn" onclick="saveAndSend()">ENREGISTRER & ENVOYER MAIL</button>
+</div>
+
+<script>
+// Initialisation de la date du jour au format ISO pour le champ type="date"
+(function initDateField() {
+    const input = document.getElementById('dateMain');
+    const d = new Date();
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    input.value = `${year}-${month}-${day}`; 
+})();
+
+// Conversion majuscules
+document.querySelectorAll('input').forEach(input => {
+    input.addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+    });
+});
+
+async function saveAndSend() {
+    const element = document.getElementById('pdf');
+    const bookingRef = document.getElementById('bookingRef').value || "SANS_REF";
+    const fileName = `UM_Waiver_${bookingRef}.pdf`;
+
+    const opt = {
+        margin: 0,
+        filename: fileName,
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    try {
+        // Sauvegarde locale
+        html2pdf().set(opt).from(element).save();
+
+        // Envoi serveur
+        const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
+        const formData = new FormData();
+        formData.append('pdf', pdfBlob, fileName);
+        formData.append('filename', fileName);
+        formData.append('subject', `UM SERVICE WAIVER FORM - ${bookingRef}`);
+        formData.append('body', `Veuillez trouver ci-joint le formulaire pour le dossier ${bookingRef}.`);
+
+        const response = await fetch('/send-pdf', { method: 'POST', body: formData });
+        if (response.ok) alert("Succès : Formulaire enregistré et envoyé !");
+        else alert("Erreur lors de l'envoi mail.");
+    } catch (e) {
+        alert("Erreur technique lors de la génération.");
+    }
+}
+</script>
+
+</body>
+</html>

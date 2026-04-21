@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UM - Departure Checklist</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @page { size: A4 portrait; margin: 0; }
+        body { font-family: "Arial", sans-serif; font-size: 11px; margin: 0; padding: 0; text-transform: uppercase; background: #f0f0f0; line-height: 1.3; color: black; }
+        
+        .page { width: 210mm; height: 296mm; padding: 12mm 20mm; margin: 10px auto; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); position: relative; box-sizing: border-box; }
+        .no-print { 
+    text-align: center; 
+    margin: 20px 0; 
+    display: flex; 
+    justify-content: center; /* Centre les boutons horizontalement */
+    gap: 15px;               /* Définit un petit espace fixe entre eux */
+}
+
+        /* HEADER */
+        .header-top { text-align: center; margin-bottom: 15px; position: relative; width: 100%; }
+        .title-departure { font-size: 18px; font-weight: bold; text-decoration: underline; display: block; margin-bottom: 20px; text-align: center; width: 100%; }
+        .logo-sq-bird { height: 42px; position: absolute; right: 0; top: 10px; }
+
+        .header-flex { border-bottom: 1px solid black; padding-bottom: 2px; margin-bottom: 8px; }
+        .title-checklist { font-size: 14px; font-weight: bold; }
+        .title-sub { font-size: 10px; font-style: italic; font-weight: normal; text-transform: none; }
+
+        /* NOTES */
+        .notes-section { margin: 10px 0; font-size: 10.5px; }
+        .notes-section ul { list-style-type: disc; margin-left: 25px; padding: 0; }
+        .notes-section li { margin-bottom: 5px; }
+
+        /* TABLEAU INFOS VOL (L'ENCADRÉ D'ORIGINE) */
+        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; border: 1px solid black; }
+        .info-table td { border: 1px solid black; padding: 8px 10px; vertical-align: top; }
+
+        .input-line { border: none; border-bottom: 1px solid black; font-weight: bold; font-family: Arial; font-size: 12px; text-transform: uppercase; outline: none; background: transparent; }
+        
+        /* CHECKLIST ITEMS */
+        .section-title { font-weight: bold; margin: 15px 0 8px 0; font-size: 12px; }
+        .check-row { display: flex; align-items: flex-start; margin-bottom: 8px; }
+        .check-box { width: 13px; height: 13px; border: 1px solid black; margin-right: 12px; flex-shrink: 0; margin-top: 2px; }
+        .check-box input { width: 100%; height: 100%; cursor: pointer; margin: 0; }
+        .italic-note { font-style: italic; font-size: 10px; margin-left: 25px; margin-bottom: 5px; text-transform: none; }
+
+        /* SSR & SIGNATURES */
+        .ssr-box { border: 1px solid black; padding: 12px; margin: 15px 0; font-weight: bold; font-style: italic; font-size: 11px; }
+        .sig-row { display: flex; justify-content: space-between; margin-top: 10px; } /* Ajusté de 15px à 10px pour gagner de l'espace */
+        .sig-item { display: flex; align-items: baseline; width: 48%; }
+        .sig-label { font-weight: bold; min-width: 95px; }
+
+        .logo-um-stripe { height: 45px; display: block; margin: 8px 0 8px 25px; border: 1px solid black; }
+
+        /* POSITIONNEMENT FOOTER */
+        .footer-ref { position: absolute; bottom: 8mm; right: 20mm; font-size: 10px; font-weight: bold; }
+        .page-num { position: absolute; bottom: 13mm; right: 20mm; font-size: 11px; }
+
+        .btn-action { padding: 12px 25px; cursor: pointer; font-weight: bold; border-radius: 4px; border: none; font-size: 13px; color: white; }
+        select { background: transparent; border: none; border-bottom: 1px solid black; font-weight: bold; text-transform: uppercase; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div id="form-to-print">
+    <div class="page">
+        <div class="header-top">
+            <span class="title-departure">DEPARTURE</span>
+            <img src="LOGO2.PNG" class="logo-sq-bird">
+        </div>
+
+        <div class="header-flex">
+            <div>
+                <span class="title-checklist">UMNR SELF-ASSESSMENT CHECKLIST</span>
+                <span class="title-sub">(To be completed by handling agent)</span>
+            </div>
+        </div>
+
+        <div class="notes-section">
+            <div style="font-weight: bold; margin-bottom: 3px;">Notes:</div>
+            <ul>
+                <li>This checklist is intended for the sole purpose of ensuring Unaccompanied Minor Special Service Request (UMNR) handling at SINHUB or line stations follows GSM Chapter 2.11</li>
+                <li>Stations are to retain a copy of this Self-Assessment Checklist together with the UM documents for 7 years.</li>
+            </ul>
+        </div>
+
+        <table class="info-table">
+            <tr>
+                <td style="width: 50%;"><b>Flight Number:</b> <select class="select-vol"><option value="SQ335">SQ335</option><option value="SQ337">SQ337</option></select></td>
+                <td style="width: 50%;"><b>Date of Travel (DDMMYY):</b> <input type="date" class="input-date-calendar input-line" style="width: 100px;"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div style="font-weight: bold; text-decoration: underline; margin-bottom: 8px;">UM Info:</div>
+                    <div style="margin-bottom: 8px;"><b>Name:</b> <input type="text" class="input-line" style="width: 80%;"></div>
+                    <div style="margin-bottom: 8px;"><b>Age:</b> <input type="text" class="input-line" style="width: 50px;"></div>
+                    <div><b>PNR No:</b> <input type="text" class="input-line" style="width: 150px;"></div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="section-title">At Check-in:</div>
+        
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Pax is between 5 and 17 years old (inclusive) according to the DOB in the passport.</div>
+        </div>
+
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>UMNR service is confirmed, and parent/guardian has verified UMNR details.</div>
+        </div>
+        <div class="italic-note">(If the parent/guardian is not present with the UM at check-in, check-in agent must establish contact with the parent/guardian.)</div>
+
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Confirmed with parent/guardian if UMNR's final destination matches the system's records, UMNR has no onward connection with OAL.</div>
+        </div>
+
+        <div style="font-style: italic; margin: 10px 0 5px 0; text-transform: none;">If UMNR has onward connection with OAL,</div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Verified that parent/guardian have arranged for the UMNR to be met and cared for at the transfer point.</div>
+        </div>
+        <div class="italic-note">(A copy of confirmation with OAL is to be retained, where possible.)</div>
+
+        <div class="section-title">Documents:</div>
+
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>UM Service Request Form completed and properly filled in.</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>UM Folder has been raised.</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Baggage tagged with JCL priority tag along with destination tag.</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Affixed a self-adhesive orange and white candy-striped sticker to the UMNR's boarding pass and checked baggage.</div>
+        </div>
+        <img src="UM.PNG" class="logo-um-stripe">
+
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Payment has been made if UM is aged between 12 and 17 years old (inclusive).</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>UMNR along with UM Folder has been handed over to ground staff assigned to assist UMNR through departure formalities.</div>
+        </div>
+
+        <div style="font-style: italic; margin-top: 15px; text-transform: none;">If UMNR service is waived:</div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Pax is aged between 12 and 17 years old (inclusive).</div>
+        </div>
+        <div class="check-row" style="margin-bottom: 50px;">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>UM Service Waiver Form completed.</div>
+        </div>
+
+        <div class="page-num">1</div>
+        <div class="footer-ref">AOD/03/170524</div>
+    </div>
+
+    <div class="page">
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>PNR in the system is updated using SSR keyword "MAAS" in the following format:</div>
+        </div>
+        <div class="ssr-box">
+            "UMNR SERVICE DECLINED. FORM COLLECTED BY XX STN XX ON XX DATE XX. EMEX CTC XX NAME XX TEL NO (with country code)"
+        </div>
+
+        <div class="sig-row">
+            <div class="sig-item"><span class="sig-label">Completed by:</span> <input type="text" class="input-line" value="ALYZIA" style="width: 100%;"></div>
+            <div class="sig-item"><span class="sig-label">Station:</span> <input type="text" class="input-line" value="CDG" style="width: 100%;"></div>
+        </div>
+        <div class="sig-row">
+            <div class="sig-item"><span class="sig-label">Designation:</span> <input type="text" class="input-line" value="LEADER" style="width: 100%;"></div>
+            <div class="sig-item"><span class="sig-label">Date:</span> <input type="date" class="input-date-calendar input-line" style="width: 100%;"></div>
+        </div>
+
+        <div class="section-title" style="margin-top: 20px;">Embarkation:</div> <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Assisted UMNR through departure formalities,
+                <div style="margin-left: 20px; margin-top: 4px;">
+                    a. Immigration<br>
+                    b. Security screening
+                </div>
+            </div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Escorted UMNR to gate early and introduce to Cabin Crew-in-charge (CIC) during boarding.</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>CIC acknowledged the handover of the UMNR by signing the "Embarkation-Ground Staff Copy" of the UMNR Folder.</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>"Embarkation-Ground Staff Copy" extracted and retained by the ground staff.</div>
+        </div>
+
+        <div style="font-style: italic; margin: 15px 0 8px 0; text-transform: none;">If UMNR travelling with parents/guardians in different cabin class:</div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Advised cabin crew that handover of UMNR upon arrival has to be to ground staff instead of directly to parent/guardian.</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Informed downline stations about the arrangement to ensure that UMNR is met at the aircraft upon arrival.</div>
+        </div>
+
+        <div class="section-title">Post-departure:</div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Advised downline stations about UM, providing UM information (contact person's name, address, etc.).
+                 <div style="font-style: italic; font-size: 10px; margin-top: 4px; text-transform: none;">(Stations: Send advise via email, SATS: Update PNR)</div>
+            </div>
+        </div>
+
+        <div class="sig-row" style="margin-top: 20px;"> <div class="sig-item">
+                <span class="sig-label">Completed by:</span>
+                <select class="input-line" style="width: 100%;">
+                    <option value="JUDITH.T">JUDITH.T</option>
+                    <option value="HANANE.C">HANANE.C</option>
+                    <option value="SAYNEEN.Q">SAYNEEN.Q</option>
+                    <option value="HARRY.L">HARRY.L</option>
+                    <option value="ELIANE.L">ELIANE.L</option>
+                    <option value="MARION.L">MARION.L</option>
+                    <option value="VALERIE.O">VALERIE.O</option>
+                    <option value="NOHEN.G">NOHEN.G</option>
+                    <option value="CLEMENTINE">CLEMENTINE</option>
+                </select>
+            </div>
+            <div class="sig-item"><span class="sig-label">Station:</span> <input type="text" class="input-line" value="CDG" style="width: 100%;"></div>
+        </div>
+        <div class="sig-row">
+            <div class="sig-item"><span class="sig-label">Designation:</span> <input type="text" class="input-line" value="CSC" style="width: 100%;"></div>
+            <div class="sig-item"><span class="sig-label">Date:</span> <input type="date" class="input-date-calendar input-line" style="width: 100%;"></div>
+        </div>
+
+        <div class="page-num">2</div>
+        <div class="footer-ref">AOD/03/170524</div>
+    </div>
+</div>
+
+<div class="no-print" style="text-align: center; margin: 20px 0; display: flex; justify-content: center; gap: 20px;">
+    <button onclick="window.location.href='index.html'" style="padding: 15px 30px; background: #6c757d; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">
+        RETOUR AU MENU
+    </button>
+
+    <button onclick="saveAndSend()" style="padding: 15px 30px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">
+        ENREGISTRER PDF & ENVOYER
+    </button>
+</div>
+
+<script>
+document.querySelectorAll('.input-date-calendar').forEach(el => el.valueAsDate = new Date());
+
+async function saveAndSend() {
+    const element = document.getElementById('form-to-print');
+    const flight = document.querySelector('.select-vol').value;
+    const dateInput = document.querySelector('.input-date-calendar').value;
+    const dateVal = dateInput.split('-').reverse().join('-');
+    const fileName = `Departure_Checklist_${flight}_${dateVal}.pdf`;
+
+    const opt = {
+        margin: 0,
+        filename: fileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+
+    const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
+    const formData = new FormData();
+    formData.append('pdf', pdfBlob, fileName);
+    formData.append('filename', fileName);
+    formData.append('subject', `DEPARTURE CHECKLIST - ${flight} - ${dateVal}`);
+    formData.append('body', `CI-JOINT LA CHECKLIST UMNR POUR LE VOL ${flight} DU ${dateVal}.`);
+
+    try {
+        const response = await fetch("/send-pdf", { method: 'POST', body: formData });
+        if (response.ok) alert("Succès : Enregistré et envoyé à l'OPS !");
+        else alert("Erreur lors de l'envoi mail.");
+    } catch (e) { alert("Erreur réseau."); }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UM - Arrival Checklist</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @page { size: A4 portrait; margin: 0; }
+        body { font-family: "Arial", sans-serif; font-size: 11px; margin: 0; padding: 0; text-transform: uppercase; background: #f0f0f0; line-height: 1.4; color: black; }
+        
+        .page { width: 210mm; height: 296mm; padding: 12mm 20mm; margin: 10px auto; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); position: relative; box-sizing: border-box; }
+        .no-print { text-align: center; margin: 20px 0; display: flex; justify-content: center; gap: 20px; }
+
+        /* HEADER */
+        .header-top { text-align: center; position: relative; margin-bottom: 15px; width: 100%; }
+        .title-arrival { font-size: 18px; font-weight: bold; text-decoration: underline; display: block; margin-bottom: 20px; text-align: center; width: 100%; }
+        .logo-sq-bird { height: 42px; position: absolute; right: 0; top: 10px; }
+
+        .header-flex { border-bottom: 1px solid black; padding-bottom: 2px; margin-bottom: 8px; }
+        .title-checklist { font-size: 14px; font-weight: bold; }
+        .title-sub { font-size: 10px; font-style: italic; font-weight: normal; text-transform: none; }
+
+        /* NOTES */
+        .notes-section { margin: 10px 0; font-size: 10.5px; }
+        .notes-section ul { list-style-type: disc; margin-left: 25px; padding: 0; }
+        .notes-section li { margin-bottom: 5px; }
+
+        /* TABLEAU INFOS VOL CENTRÉES */
+        .info-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; border: 1px solid black; }
+        .info-table td { border: 1px solid black; padding: 8px 10px; vertical-align: top; }
+        .info-table b { display: inline-block; margin-bottom: 5px; }
+
+        .input-line { border: none; border-bottom: 1px solid black; font-weight: bold; font-family: Arial; font-size: 12px; text-transform: uppercase; outline: none; background: transparent; text-align: center; }
+        
+        /* CHECKLIST ITEMS */
+        .section-title { font-weight: bold; margin: 15px 0 8px 0; font-size: 12px; }
+        .check-row { display: flex; align-items: flex-start; margin-bottom: 8px; }
+        .check-box { width: 13px; height: 13px; border: 1px solid black; margin-right: 12px; flex-shrink: 0; margin-top: 2px; }
+        .check-box input { width: 100%; height: 100%; cursor: pointer; margin: 0; }
+        .sub-item { margin-left: 25px; margin-top: 4px; }
+
+        /* SIGNATURES CENTRÉES (IMAGE 133B8E) */
+        .sig-row { display: flex; justify-content: space-between; margin-top: 20px; }
+        .sig-item { display: flex; align-items: baseline; width: 48%; }
+        .sig-label { font-weight: bold; min-width: 110px; }
+
+        /* FOOTER */
+        .footer-ref { position: absolute; bottom: 8mm; right: 20mm; font-size: 10px; font-weight: bold; }
+        .page-num { position: absolute; bottom: 13mm; right: 20mm; font-size: 11px; }
+
+        select { background: transparent; border: none; border-bottom: 1px solid black; font-weight: bold; text-transform: uppercase; font-size: 12px; text-align: center; text-align-last: center; }
+    </style>
+</head>
+<body>
+
+<div id="form-to-print">
+    <div class="page">
+        <div class="header-top">
+            <span class="title-arrival">ARRIVAL</span>
+            <img src="LOGO2.PNG" class="logo-sq-bird">
+        </div>
+
+        <div class="header-flex">
+            <div>
+                <span class="title-checklist">UMNR SELF-ASSESSMENT CHECKLIST</span>
+                <span class="title-sub">(To be completed by handling agent)</span>
+            </div>
+        </div>
+
+        <div class="notes-section">
+            <div style="font-weight: bold; margin-bottom: 3px;">Notes:</div>
+            <ul>
+                <li>This checklist is intended for the sole purpose of ensuring Unaccompanied Minor Special Service Request (UMNR) handling at SINHUB or line stations follows GSM Chapter 2.11</li>
+                <li>Stations are to retain a copy of this Self-Assessment Checklist together with other UM documents for 7 years.</li>
+            </ul>
+        </div>
+
+        <table class="info-table">
+            <tr>
+                <td style="width: 50%; text-align: left;"><b>Flight Number:</b> <select class="select-vol" style="width: 100px;"><option value="SQ336">SQ336</option><option value="SQ338">SQ338</option></select></td>
+                <td style="width: 50%; text-align: left;"><b>Date of Travel (DDMMYY):</b> <input type="date" class="input-date-calendar input-line" style="width: 110px;"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div style="font-weight: bold; text-decoration: underline; margin-bottom: 8px;">UM Info:</div>
+                    <div style="margin-bottom: 8px;"><b>Name:</b> <input type="text" class="input-line" style="width: 80%;"></div>
+                    <div style="margin-bottom: 8px;"><b>Age:</b> <input type="text" class="input-line" style="width: 60px;"></div>
+                    <div><b>PNR No:</b> <input type="text" class="input-line" style="width: 150px;"></div>
+                </td>
+            </tr>
+        </table>
+
+        <div class="section-title">Arrival formalities:</div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Met the aircraft and took over the responsibility for the UMNR from the cabin crew.</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>"Disembarkation - Cabin Crew Copy" of the UMNR Folder signed, extracted and retained by the Cabin Crew.</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Took over UMNR Folder from cabin crew.</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Assisted UMNR with arrival formalities*:
+                <div class="sub-item">a. Fill up immigration arrival card</div>
+                <div class="sub-item">b. Passport clearance</div>
+                <div class="sub-item">c. Baggage identification and collection</div>
+            </div>
+        </div>
+
+        <div class="section-title">Handover to parent/guardian:</div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Verified parent/guardian's identity prior to handing over the UMNR.</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Parent/guardian acknowledged the handover of the minor by signing on the "Arrival - Ground Staff Copy" of UMNR folder.</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>"Arrival - Ground Staff Copy" of the UMNR Folder retained by the ground staff.</div>
+        </div>
+        <div class="check-row">
+            <div class="check-box"><input type="checkbox"></div>
+            <div>Contacted parent/guardian if he/she failed to show up at the airport to meet the UMNR.*</div>
+        </div>
+
+        <div class="sig-row" style="margin-top: 30px;">
+            <div class="sig-item">
+                <span class="sig-label">Completed by:</span>
+                <input type="text" class="input-line" value="ALYZIA" style="width: 100%;">
+            </div>
+            <div class="sig-item"><span class="sig-label">Station:</span> <input type="text" class="input-line" value="CDG" style="width: 100%;"></div>
+        </div>
+        <div class="sig-row">
+            <div class="sig-item"><span class="sig-label">Designation:</span> <input type="text" class="input-line" value="AGENT" style="width: 100%;"></div>
+            <div class="sig-item"><span class="sig-label">Date:</span> <input type="date" class="input-date-calendar input-line" style="width: 100%;"></div>
+        </div>
+
+        <div style="font-style: italic; font-size: 9px; margin-top: 20px; text-transform: none;">
+            * Not necessary if UMNR travelling with parents/guardians in different cabin class and UM escort services has been declined.
+        </div>
+
+        <div class="page-num">1</div>
+        <div class="footer-ref">AOD/03/170524</div>
+    </div>
+</div>
+
+<div class="no-print" style="text-align: center; margin: 20px 0; display: flex; justify-content: center; gap: 20px;">
+    <button onclick="window.location.href='index.html'" style="padding: 15px 30px; background: #6c757d; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">
+        RETOUR AU MENU
+    </button>
+    <button onclick="saveAndSend()" style="padding: 15px 30px; background: #002663; color: white; border: none; font-weight: bold; cursor: pointer; border-radius: 5px;">
+        ENREGISTRER & ENVOYER MAIL
+    </button>
+</div>
+
+<script>
+document.querySelectorAll('.input-date-calendar').forEach(el => el.valueAsDate = new Date());
+
+async function saveAndSend() {
+    const element = document.getElementById('form-to-print');
+    const flight = document.querySelector('.select-vol').value;
+    const dateInput = document.querySelectorAll('.input-date-calendar')[0].value;
+    const dateVal = dateInput.split('-').reverse().join('-');
+    const fileName = `Arrival_Checklist_${flight}_${dateVal}.pdf`;
+
+    const opt = {
+        margin: 0,
+        filename: fileName,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+
+    const pdfBlob = await html2pdf().set(opt).from(element).output('blob');
+    const formData = new FormData();
+    formData.append('pdf', pdfBlob, fileName);
+    formData.append('filename', fileName);
+    formData.append('subject', `ARRIVAL CHECKLIST - ${flight} - ${dateVal}`);
+    formData.append('body', `CI-JOINT LA CHECKLIST D'ARRIVEE UMNR POUR LE VOL ${flight} DU ${dateVal}.`);
+
+    try {
+        const response = await fetch("/send-pdf", { method: 'POST', body: formData });
+        if (response.ok) alert("Succès : Enregistré et envoyé à l'OPS !");
+        else alert("Erreur lors de l'envoi mail.");
+    } catch (e) { alert("Erreur réseau."); }
+}
+</script>
+</body>
+</html>

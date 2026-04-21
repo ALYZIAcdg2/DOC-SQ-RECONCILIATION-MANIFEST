@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="EN">
+<head>
+    <meta charset="UTF-8">
+    <title>MOTORISED WHEELCHAIR HANDLING CHECKLIST</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @page { size: A4 portrait; margin: 0; }
+        body { font-family: Arial, sans-serif; margin: 0; background: #f0f0f0; color: #000; font-size: 10pt; text-transform: uppercase; }
+        .wrapper { width: 210mm; margin: 0 auto; }
+        
+        .page { 
+            width: 210mm; height: 297mm; background: #fff; box-sizing: border-box; 
+            position: relative; padding: 10mm 12mm; page-break-after: always;
+            display: flex; flex-direction: column;
+        }
+
+        @media print { 
+            body { background: #fff; } 
+            .page { border: none; box-shadow: none; } 
+            .no-print { display: none !important; } 
+        }
+
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th, td { border: 1.2px solid #000; padding: 8px 8px; vertical-align: middle; }
+        
+        .header-gray { background-color: #e0e0e0; font-weight: bold; text-align: center; }
+        .section-title { background-color: #e0e0e0; font-weight: bold; text-align: left; padding: 6px 12px; border: 1.2px solid #000; font-size: 10.5pt; }
+        
+        .col-1 { width: 25%; }
+        .col-2 { width: 35%; }
+        .col-3 { width: 40%; }
+
+        .red-text { color: #ff0000; font-weight: bold; font-size: 8.5pt; text-align: center; }
+        .small-guidance { font-size: 8.5pt; line-height: 1.2; }
+
+        input[type="text"], input[type="date"], select {
+            width: 100%; border: none; outline: none; background: transparent; 
+            font-family: Arial; font-size: 10.5pt; text-transform: uppercase;
+            cursor: pointer;
+        }
+        select { background-color: #f9faff; border-bottom: 1px solid #ddd; }
+
+        .sig-container { position: relative; width: 100%; height: 16mm; background: #fff; border: 1px solid #ccc; }
+        .sig-pad { width: 100%; height: 100%; cursor: crosshair; }
+        .typed-sig {
+            position: absolute; bottom: 2mm; left: 5mm; width: 90%; border: none; 
+            background: transparent; font-family: 'Courier New'; font-style: italic; 
+            font-size: 13pt; outline: none; text-transform: uppercase; z-index: 5;
+        }
+
+        .footer-info { position: absolute; left: 12mm; bottom: 8mm; font-size: 8.5pt; font-weight: bold; }
+
+        .controls { display: flex; justify-content: center; gap: 20px; padding: 15px; background: #f0f0f0; }
+        .btn { padding: 10px 22px; border: none; color: #fff; font-weight: bold; cursor: pointer; border-radius: 4px; font-size: 10pt; }
+        .btn-blue { background: #002663; }
+        .btn-gray { background: #6c757d; }
+    </style>
+</head>
+<body>
+
+<div class="wrapper" id="pdf-content">
+    
+    <div class="page">
+        <div class="header-gray" style="font-size: 15pt; padding: 10px; border: 1.5px solid #000; margin-bottom: 0;">
+            MOTORISED WHEELCHAIR HANDLING CHECKLIST
+        </div>
+        
+        <table style="flex-grow: 0.9;">
+            <tr class="header-gray">
+                <td class="col-1">S1</td>
+                <td class="col-2">DETAILS</td>
+                <td class="col-3">REMARKS</td>
+            </tr>
+            <tr>
+                <td>PASSENGER NAME/ SEAT/FLIGHT NO/DATE</td>
+                <td><input type="text"></td>
+                <td class="small-guidance">EXAMPLE: MR SINGAPORE AIRLINES/22A/SQ111/26MAR</td>
+            </tr>
+            <tr>
+                <td>WEIGHT OF WHEELCHAIR (KG)</td>
+                <td><input type="text"></td>
+                <td class="small-guidance">INPUT WEIGHT IN KG</td>
+            </tr>
+            <tr>
+                <td>BATTERY TYPE</td>
+                <td>
+                    <select>
+                        <option value="">SELECT...</option>
+                        <option>SPILLABLE - WET</option>
+                        <option>NON-SPILLABLE-WET</option>
+                        <option>NICKEL METAL HYDRIDE</option>
+                        <option>DRY CELL</option>
+                        <option>LITHIUM</option>
+                    </select>
+                </td>
+                <td class="small-guidance">EXAMPLE: SPILLABLE - WET/NON-SPILLABLE-WET, NICKEL METAL HYDRIDE, DRY CELL/LITHIUM</td>
+            </tr>
+            <tr>
+                <td>BRAND AND MODEL OF BATTERY</td>
+                <td><input type="text"></td>
+                <td class="small-guidance">INPUT BRAND AND MODEL</td>
+            </tr>
+            <tr>
+                <td>UN 38.3 DOCUMENTATION FOR LITHIUM BATTERIES</td>
+                <td>
+                    <select>
+                        <option value="">SELECT...</option>
+                        <option>YES</option>
+                        <option>NO</option>
+                    </select>
+                </td>
+                <td class="small-guidance red-text">GUIDANCE: NO UPLIFT IF NO UN38.3 DOCS</td>
+            </tr>
+            <tr>
+                <td>REMOVED / REMAINS ON CHAIR</td>
+                <td>
+                    <select>
+                        <option value="">SELECT...</option>
+                        <option>REMOVED</option>
+                        <option>REMAINS</option>
+                    </select>
+                </td>
+                <td class="small-guidance">GUIDANCE: BATTERY TO REMAIN ON WHEELCHAIR IF ADEQUATELY PROTECTED.</td>
+            </tr>
+            <tr><td colspan="3" class="section-header">S2: IF BATTERY IS <u>REMOVED</u> FROM WHEELCHAIR</td></tr>
+            <tr>
+                <td>BATTERY TYPE VERIFIED BY SQ STAFF?</td>
+                <td>
+                    <select><option value="">SELECT...</option><option>YES</option><option>NO</option></select>
+                </td>
+                <td class="small-guidance">STAFF MUST VERIFY BATTERY TYPE</td>
+            </tr>
+            <tr>
+                <td>BATTERY RATING (WH)</td>
+                <td><input type="text"></td>
+                <td class="small-guidance">EXAMPLE: 249.6 WH (APPLICABLE ONLY TO LITHIUM BATTERIES)</td>
+            </tr>
+            <tr>
+                <td>NUMBER OF BATTERIES</td>
+                <td><input type="text"></td>
+                <td class="small-guidance">EXAMPLE: 1 SPARE BATTERY AND 1 FITTED ON WHEELCHAIR</td>
+            </tr>
+            <tr>
+                <td>BATTERY CONDITION AND INSULATION</td>
+                <td><input type="text"></td>
+                <td class="small-guidance">NO VISIBLE DAMAGE OR VISIBLE LEAKS. REMOVED BATTERY IS INSULATED.</td>
+            </tr>
+            <tr>
+                <td>STOWAGE LOCATION OF WHEELCHAIR</td>
+                <td><input type="text"></td>
+                <td class="small-guidance">EXAMPLE: AKE______, H5</td>
+            </tr>
+            <tr>
+                <td>STOWAGE LOCATION OF BATTERY</td>
+                <td class="red-text">ONLY LITHIUM BATTERY CAN BE CARRIED IN CABIN</td>
+                <td style="padding: 0;">
+                    <table style="width: 100%; border: none;">
+                        <tr><td style="border: none; border-bottom: 1.2px solid #000;" class="small-guidance">EXAMPLE: AKE______, SOC</td></tr>
+                        <tr><td style="border: none; display: flex; justify-content: space-between; padding: 6px;">
+                            <span class="small-guidance">SQ STAFF VERIFIED STOWAGE DGR/IATA</span>
+                            <select style="width: 40%; font-weight: bold;"><option>YES</option><option>NO</option></select>
+                        </td></tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>LITHIUM BATTERY &le; 300WH VERIFIED</td>
+                <td class="red-text">ONLY LITHIUM BATTERY CAN BE CARRIED IN CABIN</td>
+                <td style="padding: 0;">
+                    <table style="width: 100%; border: none;">
+                        <tr><td style="border: none; border-bottom: 1.2px solid #000;" class="small-guidance">PROTECTIVE POUCH OR BAG</td></tr>
+                        <tr><td style="border: none; display: flex; justify-content: space-between; padding: 6px;">
+                            <span class="small-guidance">VERIFIED &le; 300WH</span>
+                            <select style="width: 40%; font-weight: bold;"><option>YES</option><option>NO</option></select>
+                        </td></tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>WHEELCHAIR TERMINAL POINTS DISCONNECTED</td>
+                <td colspan="2">
+                    <select style="text-align: center; font-weight: bold;">
+                        <option value="">SELECT YES / NO</option>
+                        <option>YES</option>
+                        <option>NO</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+        <div class="footer-info">MOBILITY AID CHECKLIST V2, 26FEB26</div>
+    </div>
+
+    <div class="page">
+        <div class="header-gray" style="font-size: 15pt; padding: 10px; border: 1.5px solid #000;">
+            MOTORISED WHEELCHAIR HANDLING CHECKLIST (CONT.)
+        </div>
+        
+        <table>
+            <tr class="header-gray">
+                <td class="col-1">DETAILS</td>
+                <td class="col-2">REMARKS</td>
+                <td class="col-3">EXAMPLE/GUIDANCE</td>
+            </tr>
+            <tr><td colspan="3" class="section-header">S3: IF BATTERY <u>REMAINS</u> ON WHEELCHAIR</td></tr>
+            <tr>
+                <td class="col-1">BATTERY TYPE VERIFIED BY SQ STAFF?</td>
+                <td class="col-2">
+                    <select><option value="">SELECT...</option><option>YES</option><option>NO</option></select>
+                </td>
+                <td class="col-3 small-guidance">EXAMPLE: YES/NO</td>
+            </tr>
+            <tr>
+                <td>BATTERY CONDITION AND INSULATION</td>
+                <td>
+                    <select><option value="">SELECT...</option><option>OK</option><option>DAMAGED</option></select>
+                </td>
+                <td class="small-guidance">NO VISIBLE DAMAGE OR VISIBLE LEAKS</td>
+            </tr>
+            <tr>
+                <td>STOWAGE LOCATION OF WHEELCHAIR</td>
+                <td><input type="text"></td>
+                <td class="small-guidance">EXAMPLE: AKE / H5</td>
+            </tr>
+
+            <tr><td colspan="3" class="section-header">S4: COORDINATION & NOTOC</td></tr>
+            <tr>
+                <td>WHEELCHAIR REQUIRED AT DOOR SIDE IN TRANSIT</td>
+                <td>
+                    <select><option>YES</option><option>NO</option></select>
+                </td>
+                <td class="small-guidance">EXAMPLE: YES/NO / CONNECTION: <input type="text" style="width:50%; border-bottom:1px solid #000;"></td>
+            </tr>
+            <tr>
+                <td>NOTOC REFLECTS CORRECT STOWAGE POSITION</td>
+                <td>
+                    <select><option>YES</option><option>NO</option></select>
+                </td>
+                <td class="small-guidance">EXAMPLE: YES/NO</td>
+            </tr>
+            <tr>
+                <td>CHECKLIST COMPLETED BY (NAME):</td>
+                <td>
+                    <div class="sig-container">
+                        <input type="text" class="typed-sig" placeholder="TYPE NAME">
+                        <canvas id="pad1" class="sig-pad"></canvas>
+                    </div>
+                </td>
+                <td style="vertical-align: bottom;">SIGNATURE / DATE: <input type="date" value="2026-04-21" style="width:55%; border-bottom:1px solid #000;"></td>
+            </tr>
+        </table>
+        
+        <div style="flex-grow: 1;"></div>
+        
+        <div class="footer-info">MOBILITY AID CHECKLIST V2, 26FEB26</div>
+    </div>
+</div>
+
+<div class="controls no-print">
+    <button class="btn btn-gray" onclick="window.history.back()">RETOUR</button>
+    <button class="btn btn-blue" onclick="savePDF()">ENREGISTRER & ENVOYER</button>
+</div>
+
+<script>
+    function initPad(id) {
+        const canvas = document.getElementById(id);
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+        ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.strokeStyle = '#000';
+
+        canvas.addEventListener('mousedown', () => drawing = true);
+        window.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
+        canvas.addEventListener('mousemove', (e) => {
+            if (!drawing) return;
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+        });
+    }
+
+    window.onload = () => { initPad('pad1'); };
+
+    function savePDF() {
+        const element = document.getElementById('pdf-content');
+        html2pdf().set({
+            margin: 0, filename: 'MOBILITY_CHECKLIST.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        }).from(element).save();
+    }
+</script>
+
+</body>
+</html>

@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 .env
+=======
+.env
+>>>>>>> 8cf66d6 (Migration SIA FastAPI)
 node_modules

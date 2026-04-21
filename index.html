@@ -4,52 +4,200 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIA - Accueil Formulaires CDG</title>
+
     <style>
         body { 
             font-family: Arial, sans-serif; 
-            text-align: center; 
             background-color: #f4f7f6; 
             margin: 0; 
-            padding: 50px 20px; 
+            padding: 20px; 
+            display: flex;
+            justify-content: center;
         }
+
         .menu-card {
             background: white;
-            max-width: 400px;
-            margin: 0 auto;
+            width: 95%;
+            max-width: 1000px;
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
         }
-        .logo { width: 200px; margin-bottom: 20px; }
-        h2 { color: #002663; margin-bottom: 30px; border-bottom: 2px solid #002663; padding-bottom: 10px; }
+
+        .logo { 
+            width: 220px; 
+            margin-bottom: 10px; 
+        }
+
+        h2 { 
+            color: #002663; 
+            margin-bottom: 25px; 
+            border-bottom: 2px solid #002663; 
+            padding-bottom: 10px; 
+            font-size: 18pt;
+            text-transform: uppercase;
+        }
+
+        /* Organisation en colonnes */
+        .columns-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 colonnes égales */
+            gap: 20px;
+            text-align: left;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            font-size: 10pt;
+            color: #002663;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-left: 4px solid #ffcc00;
+            padding-left: 10px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+        }
+
         .btn { 
             display: block; 
             width: 100%; 
-            margin: 15px 0; 
-            padding: 20px; 
+            margin-bottom: 10px; 
+            padding: 15px 10px; 
             background: #002663; 
             color: white; 
             text-decoration: none; 
             font-weight: bold; 
             border-radius: 5px;
-            transition: background 0.3s;
+            transition: all 0.3s;
             box-sizing: border-box;
+            cursor: pointer;
+            border: none;
+            font-size: 9.5pt;
+            text-align: center;
         }
-        .btn:hover { background: #ffcc00; color: #002663; }
-        .footer { margin-top: 30px; font-size: 10px; color: #888; }
+
+        .btn:hover { 
+            background: #ffcc00; 
+            color: #002663; 
+        }
+
+        .btn-scan {
+            background: #28a745;
+            grid-column: span 3; /* Le bouton scan prend toute la largeur en bas */
+            margin-top: 10px;
+            font-size: 12pt;
+        }
+
+        .footer { 
+            margin-top: 30px; 
+            font-size: 10px; 
+            color: #888; 
+        }
+
+        /* Adaptabilité mobile */
+        @media (max-width: 768px) {
+            .columns-container {
+                grid-template-columns: 1fr;
+            }
+            .btn-scan {
+                grid-column: span 1;
+            }
+        }
     </style>
 </head>
+
 <body>
-    <div class="menu-card">
-        <img src="SQ.png" alt="SIA Logo" class="logo">
-        <h2>DOCUMENTS CDG STATION</h2>
-        
-        <a href="reconciliation.html" class="btn">EXCESS BAG WAIVER</a>
-        <a href="manifest.html" class="btn">BAGGAGE MANIFEST</a>
-        
-        <div class="footer">
-            SINGAPORE AIRLINES - CDG STATION - 2026
+
+<div class="menu-card">
+
+    <img src="SQ.png" alt="SIA Logo" class="logo">
+
+    <h2>DOCUMENTS CDG STATION</h2>
+    
+    <div class="columns-container">
+        <div class="column">
+            <div class="section-title">Unaccompanied Minors</div>
+            <a href="Departure Checklist.html" class="btn">DEPARTURE CHECKLIST</a>
+            <a href="Arrival Checklist.html" class="btn">ARRIVAL CHECKLIST</a>
+            <a href="Transit Checklist.html" class="btn">TRANSIT CHECKLIST</a>
+            <a href="UM Service Request Form.html" class="btn">UM SERVICE REQUEST</a>
+            <a href="UM Service Waiver Form.html" class="btn">UM SERVICE WAIVER</a>
         </div>
+
+        <div class="column">
+            <div class="section-title">Passenger Services</div>
+            <a href="formulaire UPGRADE.html" class="btn">CABIN UPGRADE FORM</a>
+            <a href="Mobility aid checklist - v2.HTML" class="btn">MOBILITY AID CHECKLIST</a>
+        </div>
+
+        <div class="column">
+            <div class="section-title">Baggage & Ops</div>
+            <a href="reconciliation.html" class="btn">EXCESS BAG WAIVER</a>
+            <a href="manifest.html" class="btn">BAGGAGE MANIFEST</a>
+        </div>
+
+        <label class="btn btn-scan">
+            📸 SCAN / PHOTO DOCUMENT
+            <input type="file" accept="image/*" capture="environment" 
+                   style="display:none" onchange="handlePhoto(event)">
+        </label>
     </div>
+
+    <div class="footer">
+        SINGAPORE AIRLINES - CDG STATION - 2026
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+async function handlePhoto(event){
+    const file = event.target.files[0];
+    if(!file) return;
+    const img = document.createElement("img");
+    img.src = URL.createObjectURL(file);
+    img.onload = async function(){
+        const container = document.createElement("div");
+        container.style.width = "210mm";
+        container.style.height = "297mm";
+        container.style.display = "flex";
+        container.style.justifyContent = "center";
+        container.style.alignItems = "center";
+        container.style.background = "white";
+        img.style.maxWidth = "100%";
+        img.style.maxHeight = "100%";
+        container.appendChild(img);
+
+        const pdfBlob = await html2pdf().set({
+            margin: 0,
+            filename: "SCAN_DOCUMENT_CDG.pdf",
+            image: { type: "jpeg", quality: 1 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+        }).from(container).output("blob");
+
+        const formData = new FormData();
+        formData.append("pdf", pdfBlob, "SCAN_DOCUMENT_CDG.pdf");
+        formData.append("filename", "SCAN_DOCUMENT_CDG.pdf");
+        formData.append("subject", "SCAN DOCUMENT CDG");
+        formData.append("body", "Document scanné depuis la tablette CDG.");
+
+        try{
+            const response = await fetch("/send-pdf", { method: "POST", body: formData });
+            if(response.ok) alert("✅ Document scanné et envoyé !");
+            else alert("❌ Erreur lors de l'envoi.");
+        } catch(e){ alert("❌ Erreur réseau."); }
+    };
+}
+</script>
+
 </body>
 </html>

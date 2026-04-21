@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UM Service Request Form</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @page { size: A4 portrait; margin: 0; }
+        body{ font-family: Arial, Helvetica, sans-serif; margin:0; background:#eaeaea; color:#000; }
+        .wrapper{ width:210mm; margin:20px auto; }
+        
+        .page{ 
+            width:210mm; 
+            height:297mm; /* Hauteur A4 fixe */
+            background:#fff; 
+            box-sizing:border-box; 
+            position:relative; 
+            padding:10mm 8mm 12mm 8mm; /* Padding standard */
+            border:1px solid #aaa; 
+            box-shadow:0 0 10px rgba(0,0,0,0.18); 
+            page-break-after: always; 
+            overflow: hidden; /* Garantit que rien ne dépasse sur une page 3 */
+        }
+        
+        /* ✅ TECHNIQUE POUR FAIRE DESCENDRE LE TITRE SANS TOUCHER AUX LOGOS */
+        .page:first-child {
+            padding-top: 22mm; 
+        }
+
+        .page:last-child{ page-break-after: auto; }
+        @media print{ body{ background:#fff; } .wrapper{ width:auto; margin:0; } .page{ border:none; box-shadow:none; margin:0; } .no-print{ display:none !important; } }
+        
+        .header{ position:absolute; top:10mm; left:8mm; right:8mm; height:18mm; }
+        .logo-scoot{ height:11mm; width:auto; object-fit:contain; }
+        .logo-sq{ height:11mm; width:auto; object-fit:contain; }
+        .logo-group{ position:absolute; right:0; top:-6mm; display:flex; align-items:center; gap:8px; }
+        
+        .title{ text-align:center; font-size:14pt; font-weight:700; margin:0; }
+        .subtitle{ text-align:center; font-size:8pt; font-weight:700; line-height:1.1; margin-top:0.3mm; }
+        
+        .section{ border:1px solid #000; margin-top:0; }
+        .section + .section{ border-top:none; }
+        .section-title{ background:#d9d9d9; font-weight:700; text-transform:uppercase; text-align:left; font-size:9.5pt; border-bottom:1px solid #000; padding:1mm 2mm; }
+        .section table{ width:100%; border-collapse:collapse; table-layout:fixed; }
+        .section td, .section th{ border:1px solid #000; padding:1.1mm 1.6mm; vertical-align:top; font-size:8.4pt; }
+        .section th{ text-align:center; font-weight:700; background:#fff; }
+        
+        .no-outer-top tr:first-child td, .no-outer-top tr:first-child th{ border-top:none; }
+        .no-outer-left td:first-child, .no-outer-left th:first-child{ border-left:none; }
+        .no-outer-right td:last-child, .no-outer-right th:last-child{ border-right:none; }
+        .no-outer-bottom tr:last-child td, .no-outer-bottom tr:last-child th{ border-bottom:none; }
+        
+        .label{ font-size:8pt; line-height:1.05; font-weight:700; }
+        .input-line, .input-date{ width:100%; box-sizing:border-box; border:none; border-bottom:1px solid #000; background:#dbe3f3; font-family:Arial, Helvetica, sans-serif; font-size:8.8pt; font-weight:700; text-transform:uppercase; color:#000; outline:none; padding:1px 3px; height:17px; }
+/* ✅ TITRES SOULIGNÉS ICI */
+        .notes-title, .declaration-title { 
+            font-size:12pt; 
+            font-weight:700; 
+            margin-bottom:3mm; 
+            text-decoration: underline; 
+        }        
+
+        .small-note{ margin-top:3mm; font-size:7.8pt; line-height:1.15; text-align:justify; }
+        .notes-title{ font-size:12pt; font-weight:700; margin-bottom:3mm; }
+        .notes-list{ font-size:8.8pt; line-height:1.2; margin:0; padding-left:18px; }
+        .notes-list li{ margin-bottom:1.5mm; text-align:justify; }
+        
+        .declaration-title{ font-size:12pt; font-weight:700; margin:4mm 0 3mm 0; }
+        .decl-list{ margin:0; padding:0; list-style:none; font-size:8.8pt; line-height:1.2; }
+        .decl-list li{ margin-bottom:1.8mm; display:flex; align-items:flex-start; gap:7px; text-align:justify; }
+        
+        .signature-wrap{ margin-top:6mm; display:flex; align-items:flex-end; justify-content:space-between; }
+        .signature-pad {
+    width: 75mm;
+    height: 15mm; /* Réduit de 22mm à 18mm pour compenser le champ texte */
+    border: 1px solid #000;
+    background: #fff;
+}
+        .footer-note{ margin-top:0mm; font-size:8.5pt; font-style:italic; }
+.footer-ref {
+    position: absolute; /* Fixe le placement */
+    right: 8mm;         /* Aligné à droite */
+    bottom: 6mm;        /* Distance précise du bord bas */
+    font-size: 8pt;
+}
+        
+        .no-print{ display:flex; justify-content:center; gap:20px; margin:20px auto 30px; width:210mm; }
+        .btn{ padding:12px 24px; border:none; color:#fff; font-weight:700; cursor:pointer; border-radius:4px; background:#002663; }
+        .btn-retour{ background:#6c757d; }
+        .section{ border:1px solid #000; margin-top:-1px; }
+
+/* Espace avant "NOTES" et "DECLARATION" */
+.notes-title, .declaration-title {
+    font-size: 12pt;
+    font-weight: 700;
+    margin-top: 8mm; /* Augmentez cette valeur pour descendre le bloc */
+    margin-bottom: 3.5mm;
+}
+
+/* Espace entre les lignes des listes */
+.notes-list li, .decl-list li {
+    margin-bottom: 4mm; /* Augmente l'espace entre chaque point */
+    text-align: justify;
+}
+
+/* Pousser le bloc de signature vers le bas */
+.signature-wrap {
+    margin-top: 0mm; /* Ajustez cette valeur pour que la signature arrive juste au-dessus du footer */
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.date-sign-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom:25mm; /* Ajustez cette valeur pour faire monter ou descendre la date précisément */
+}
+
+.signature-box {
+    position: relative;
+    width: 95mm;
+}
+
+.signature-pad-container {
+    position: relative;
+    border: 1px solid #000;
+    background: #fff;
+    height: 20mm; /* Ajustez selon vos besoins */
+}
+
+/* La ligne à l'intérieur du cadre */
+.signature-line-overlay {
+    position: absolute;
+    bottom: 6mm; /* Position de la ligne dans le cadre */
+    left: 5mm;
+    right: 5mm;
+    border-top: 1px dotted #000;
+    pointer-events: none; /* Pour ne pas gêner le tracé au doigt */
+}
+
+.signature-pad {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+    </style>
+</head>
+<body>
+
+<div class="wrapper" id="pdf-content">
+    <div class="page">
+        <div class="header">
+            <div class="logo-group">
+                <img src="Scoot.png" class="logo-scoot">
+                <img src="SQ2.png" class="logo-sq">
+            </div>
+        </div>
+
+        <div class="title">UNACCOMPANIED MINOR SERVICE REQUEST FORM</div>
+        <div class="subtitle">(SIA: Unaccompanied Minors between 5 and below 18 years old)</div>
+        <div class="subtitle">(Scoot: Unaccompanied Minors between 12 and below 18 years old)</div>
+
+<div class="section" style="margin-top: 5mm;">
+            <div class="section-title">1 &nbsp;&nbsp; UNACCOMPANIED MINOR’S PERSONAL PARTICULARS</div>
+            <table class="no-outer-top no-outer-left no-outer-right no-outer-bottom">
+                <tr>
+                    <td colspan="2" style="width:50%;"><div class="label">Surname</div><input type="text" class="input-line"></td>
+                    <td colspan="2" style="width:50%;"><div class="label">First Name</div><input type="text" class="input-line"></td>
+                </tr>
+                <tr>
+                    <td style="width:20%;"><div class="label">Date of Birth</div><input type="date" class="input-date"></td>
+                    <td style="width:10%;"><div class="label">Age</div><input type="text" class="input-line"></td>
+                    <td style="width:15%;"><div class="label">Gender</div><input type="text" class="input-line"></td>
+                    <td style="width:25%;"><div class="label">Passport No.</div><input type="text" class="input-line"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><div class="label">Contact Number</div><input type="text" class="input-line"></td>
+                    <td colspan="2"><div class="label">Country of Residence</div><input type="text" class="input-line"></td>
+                </tr>
+                <tr><td colspan="4"><div class="label">Home Address</div><input type="text" class="input-line"></td></tr>
+                <tr>
+                    <td><div class="label">Language(s)</div><input type="text" class="input-line"></td>
+                    <td colspan="3"><div class="label">Information to Note</div><input type="text" class="input-line"></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">2 &nbsp;&nbsp; CONTACT DETAILS OF THE MINOR’S PARENT/GUARDIAN</div>
+            <table class="no-outer-top no-outer-left no-outer-right no-outer-bottom">
+                <tr><td style="width:50%;"><div class="label">Surname</div><input type="text" class="input-line"></td><td style="width:50%;"><div class="label">First Name</div><input type="text" class="input-line"></td></tr>
+                <tr><td><div class="label">Relationship to the Minor</div><input type="text" class="input-line"></td><td><div class="label">Contact Number</div><input type="text" class="input-line"></td></tr>
+                <tr><td><div class="label">Home Address</div><input type="text" class="input-line"></td><td><div class="label">Country of Residence</div><input type="text" class="input-line"></td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">3 &nbsp;&nbsp; FLIGHT DETAILS</div>
+            <table class="no-outer-top no-outer-left no-outer-right">
+                <tr><td style="width:25%;"><div class="label">Departing From:</div><input type="text" class="input-line"></td><td style="width:25%;"><div class="label">Destination:</div><input type="text" class="input-line"></td><td style="width:50%;"><div class="label">Booking Reference(s):</div><input type="text" class="input-line"></td></tr>
+            </table>
+            <table class="no-outer-left no-outer-right no-outer-bottom">
+                <tr><th style="width:25%;">Flight Number</th><th style="width:25%;">Date</th><th style="width:25%;">From</th><th style="width:25%;">To</th></tr>
+                <tr><td><input type="text" class="input-line"></td><td><input type="date" class="input-date"></td><td><input type="text" class="input-line"></td><td><input type="text" class="input-line"></td></tr>
+                <tr><td><input type="text" class="input-line"></td><td><input type="date" class="input-date"></td><td><input type="text" class="input-line"></td><td><input type="text" class="input-line"></td></tr>
+            </table>
+            <div class="checkbox-line"> Any connecting flights not operated by SIA or Scoot^: <label><input type="checkbox" name="connect-flight" value="yes"> Yes</label><label><input type="checkbox" name="connect-flight" value="no"> No</label> </div>
+            <div class="details-line"> If yes, please state details: <input type="text" class="input-line" style="width:60%; display:inline-block; vertical-align:middle; margin-left:6px;"> </div>
+            <div class="small-note"> ^Operating airline’s unaccompanied minors’ (UM) policy will apply. If your child/ward’s itinerary includes flights operated by other airlines (not SIA or Scoot), please note that other airlines may have a different policy for minors under 18 years old travelling alone. To ensure that your child/ward fulfils the other airlines’ UM policy, please contact the operating airlines for clarification on their UM policy. </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">4 &nbsp;&nbsp; INFORMATION OF THE PERSON SENDING OFF THE UM AT DEPARTURE</div>
+            <table class="no-outer-top no-outer-left no-outer-right no-outer-bottom">
+                <tr>
+                    <td style="width:50%;"><div class="label">Surname</div><input type="text" class="input-line"></td>
+                    <td style="width:50%;"><div class="label">First Name</div><input type="text" class="input-line"></td>
+                </tr>
+                <tr>
+                    <td><div class="label">Relationship to the Minor</div><input type="text" class="input-line"></td>
+                    <td><div class="label">Identification Document / Passport No.</div><input type="text" class="input-line"></td>
+                </tr>
+                <tr>
+                    <td><div class="label">Contact Number</div><input type="text" class="input-line"></td>
+                    <td><div class="label">Country of Residence</div><input type="text" class="input-line"></td>
+                </tr>
+                <tr><td colspan="2"><div class="label">Home Address</div><input type="text" class="input-line"></td></tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">5 &nbsp;&nbsp; INFORMATION OF THE PERSON MEETING THE UM AT DESTINATION</div>
+            <table class="no-outer-top no-outer-left no-outer-right no-outer-bottom">
+                <tr><td style="width:50%;"><div class="label">Surname</div><input type="text" class="input-line"></td><td style="width:50%;"><div class="label">First Name</div><input type="text" class="input-line"></td></tr>
+                <tr><td><div class="label">Relationship</div><input type="text" class="input-line"></td><td><div class="label">Identification Document / Passport No.</div><input type="text" class="input-line"></td></tr>
+                <tr><td><div class="label">Contact Number</div><input type="text" class="input-line"></td><td><div class="label">Country of Residence</div><input type="text" class="input-line"></td></tr>
+                <tr><td colspan="2"><div class="label">Home Address</div><input type="text" class="input-line"></td></tr>
+            </table>
+        </div>
+        <div class="footer-ref">CCSD/05/170723</div>
+    </div>
+
+    <div class="page">
+        <div class="header">
+            <div class="logo-group">
+                <img src="Scoot.png" class="logo-scoot">
+                <img src="SQ2.png" class="logo-sq">
+            </div>
+        </div>
+
+        <div class="notes-title">NOTES</div>
+        <ol class="notes-list">
+            <li>Unaccompanied Minor (UMNR) Service only applies to flights operated by Singapore Airlines (SIA) and Scoot and must be arranged separately for the outward & return journey.</li>
+            <li>UMNR Service is mandatory on flights operated by SIA for minors aged between 5 to under 12 years old travelling alone or travelling in a different cabin class from their accompanying adult.</li>
+            <li>Minors under 5 years old are not allowed to travel unaccompanied on flights operated by SIA. Minors under 12 years old are not allowed to travel unaccompanied on flights operated by Scoot.</li>
+            <li>On a mixed itinerary with flights operated by both SIA and Scoot, minors under 12 years old will not be allowed to travel unaccompanied on both airlines.</li>
+            <li>Where there is more than 1 flight sector for the journey with the flights operated by SIA, Scoot or both, the UMNR Service for Unaccompanied Minors between 12 years and below 18 years old shall be provided for the entire journey and not only for a specific flight sector in the journey.</li>
+            <li>Dispensation for UMNR Service can be obtained for Unaccompanied Minors between 12 years and below 18 years old if parental/legal guardian consent is given. In such an instance, an "Unaccompanied Minor Service Waiver Form" must be signed by the parent/guardian for each outward and return journey.</li>
+            <li>Carriage of Unaccompanied Minors shall be subject to SIA's General Conditions of Carriage (GCC) and Conditions of Contract (COC), which can be found on www.singaporeair.com and they shall prevail to govern SIA's rights and remedies.</li>
+            <li>Carriage of Unaccompanied Minors on Scoot shall be subject to Scoot's Conditions of Carriage, which can be found on www.flyscoot.com and they shall prevail to govern Scoot's rights and remedies.</li>
+        </ol>
+
+        <div class="declaration-title">DECLARATION</div>
+        <ul class="decl-list">
+            <li><input type="checkbox"> <span>I declare all the particulars furnished by me in this form are true and correct.</span></li>
+            <li><input type="checkbox"> <span>I declare that I am responsible in ensuring that my child/ward* has my permission to travel on this flight.</span></li>
+            <li><input type="checkbox"> <span>I confirm that I have arranged for my child/ward* to be met on arrival by the persons named. These persons will be available at the airport at the scheduled arrival time of the flight.</span></li>
+            <li><input type="checkbox"> <span>Should my child/ward* not be met as stated, I authorize SIA and/or Scoot (as the case may be) to take whatever action they consider necessary to ensure my child’s/ward’s* safe custody including return of my child/ward* to the airport of original departure. I agree to indemnify and reimburse SIA and/or Scoot (as the case may be) for the costs and expenses incurred by them in taking such action.</span></li>
+            <li><input type="checkbox"> <span>Should my child/ward* be connecting or transferring to another flight operated by other airlines which are not SIA or Scoot, I confirm that appropriate arrangements have been made at the point of connection/transfer. I agree that SIA and Scoot’s responsibility and special handling duty towards my child/ward* ends at the point of disembarkation of the SIA/Scoot-operated flight. Notwithstanding the foregoing, if my child/ward* is subsequently found to be unattended to, I authorize SIA or Scoot to take whatever action they consider necessary to ensure my child’s/ward’s* safe custody including return of my child/ward* to the airport of original departure. I agree to indemnify and reimburse SIA and/or Scoot (as the case may be) for the costs and expenses incurred by them in taking such action.</span></li>
+            <li><input type="checkbox"> <span>I certify that my child/ward* is in possession of all travel documents (passport, visa, health certificate, etc.) required for the journey.</span></li>
+            <li><input type="checkbox"> <span>I confirm that I do not require my child/ward* to be provided with any special seating arrangements on board any aircraft.</span></li>
+            <li><input type="checkbox"> <span>I agree and acknowledge that any personal data provided will be processed by SIA and/or Scoot (as the case may be) for the purposes of handling the travel of my child/ward* in accordance with its Privacy Policy. The Privacy Policy for SIA and Scoot are available on www.singaporeair.com and www.flyscoot.com respectively.</span></li>
+        </ul>
+
+<div class="signature-wrap">
+    <div class="signature-box">
+        <div class="label" style="margin-bottom: 2px;">Name / Signature</div>
+        
+        <div class="signature-pad-container">
+            <input type="text" class="input-line" 
+                   style="position: absolute; bottom: 7mm; left: 5mm; width: 85%; background: transparent; border: none; font-family: 'Courier New', italic; z-index: 5;" 
+                   placeholder="Type or sign below">
+            
+            <canvas id="signaturePad" class="signature-pad"></canvas>
+            
+            <div class="signature-line-overlay"></div>
+        </div>
+        
+        <div class="signature-label" style="font-size: 8.5pt;">Signature of Parent/Guardian*</div>
+        
+        <div class="signature-actions no-print">
+            <button type="button" onclick="clearSignature()" style="font-size: 10px; margin-top: 5px;">EFFACER LE CADRE</button>
+        </div>
+    </div>
+
+<div class="date-sign-block" style="padding-bottom: 20mm;"> <div class="label">Date</div>
+        <input type="date" class="input-date" style="width:40mm; border-bottom: 1px solid #000;">
+    </div>
+</div>
+        <div class="footer-note">* Delete as necessary.</div>
+        <div class="footer-ref">CCSD/05/170723</div>
+    </div>
+</div>
+
+<div class="no-print">
+    <button class="btn btn-retour" onclick="window.history.back()">RETOUR</button>
+    <button class="btn" onclick="html2pdf().from(document.getElementById('pdf-content')).save()">ENREGISTRER PDF</button>
+</div>
+
+<script>
+    const canvas = document.getElementById('signaturePad');
+    const ctx = canvas.getContext('2d');
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        ctx.scale(ratio, ratio);
+        ctx.lineWidth = 2; ctx.lineCap = 'round';
+    }
+    resizeCanvas();
+    let drawing = false;
+    canvas.addEventListener('mousedown', (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+    canvas.addEventListener('mousemove', (e) => { if(drawing){ ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } });
+    window.addEventListener('mouseup', () => drawing = false);
+</script>
+</body>
+</html>

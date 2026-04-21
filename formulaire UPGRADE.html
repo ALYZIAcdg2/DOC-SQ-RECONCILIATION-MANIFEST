@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CABIN UPGRADE FORM</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @page { size: A4 portrait; margin: 0; }
+        body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f4; color: #000; }
+        .wrapper { width: 210mm; margin: 10px auto; }
+        
+        .page { 
+            width: 210mm; 
+            height: 297mm; 
+            background: #fff; 
+            box-sizing: border-box; 
+            position: relative; 
+            padding: 15mm 20mm;
+        }
+
+        @media print { 
+            body { background: #fff; } 
+            .wrapper { width: auto; margin: 0; } 
+            .page { border: none; box-shadow: none; } 
+            .no-print { display: none !important; } 
+        }
+
+        /* Header Logo */
+        .header { margin-bottom: 8mm; }
+        .logo-sia { height: 22mm; width: auto; object-fit: contain; }
+
+        /* Textes d'introduction - Sans Gras */
+        .salutation { 
+            font-weight: normal; 
+            margin-bottom: 4mm; 
+            font-size: 10.5pt; 
+        }
+
+        .intro-text { 
+            font-weight: normal;
+            margin-bottom: 5mm; 
+            font-size: 10pt; 
+            line-height: 1.4; 
+        }
+
+        .terms-list { padding-left: 20px; margin-bottom: 6mm; }
+        .terms-list li { 
+            margin-bottom: 3mm; 
+            font-size: 10.5pt; 
+            line-height: 1.4; 
+            text-align: justify; 
+        }
+
+        /* Titre Déclaration - Sans Gras */
+        .acknowledgment { 
+            font-weight: normal; 
+            margin-bottom: 5mm; 
+            font-size: 11pt; 
+            line-height: 1.4; 
+        }
+
+        .sub-points { list-style-type: decimal; padding-left: 25px; margin-top: 4px; }
+        .sub-points li { font-weight: normal; margin-bottom: 2mm; font-size: 10.5pt; }
+
+        /* Formulaire */
+        .form-fields { margin-top: 8mm; width: 100%; }
+        .field-row { display: flex; align-items: flex-end; margin-bottom: 6mm; gap: 10px; }
+        
+        /* Libellés - Sans Gras */
+        .field-label { 
+            font-weight: normal; 
+            min-width: 35mm; 
+            font-size: 10.5pt; 
+            text-transform: uppercase; 
+        }
+        
+        .field-input { 
+            flex-grow: 1; 
+            max-width: 90mm; 
+            border: none; 
+            border-bottom: 1px solid #000; 
+            padding: 2px 5px; 
+            font-size: 11pt; 
+            background: #f9f9f9;
+            outline: none;
+            text-transform: uppercase; /* Force majuscules lors de la saisie */
+        }
+
+        .input-calendar { width: 45mm; max-width: 45mm; flex-grow: 0; cursor: pointer; }
+
+        /* Cadre Signature */
+        .signature-container {
+            position: relative;
+            width: 85mm; 
+            height: 22mm;
+            border: 1px solid #000;
+            background: #fff;
+        }
+        .signature-line-overlay {
+            position: absolute;
+            bottom: 6mm;
+            left: 5mm;
+            right: 5mm;
+            border-top: 1px dotted #000;
+            pointer-events: none;
+        }
+        .signature-pad { width: 100%; height: 100%; cursor: crosshair; }
+        .typed-signature {
+            position: absolute;
+            bottom: 7mm;
+            left: 6mm;
+            width: 90%;
+            background: transparent;
+            border: none;
+            font-family: 'Courier New', Courier, monospace;
+            font-style: italic;
+            font-size: 13pt;
+            z-index: 5;
+            outline: none;
+            text-transform: uppercase; /* Force majuscules signature */
+        }
+
+        /* Trait au dessus de Handled By */
+        .admin-separator {
+            margin-top: 12mm;
+            padding-top: 6mm;
+            border-top: 1.5px solid #000;
+        }
+
+        .footer-ref { position: absolute; right: 20mm; bottom: 12mm; font-size: 10pt; font-weight: bold; }
+
+        /* Boutons */
+        .no-print-zone { 
+            display: flex; 
+            justify-content: center; 
+            gap: 20px; 
+            margin: 30px auto; 
+            width: 210mm; 
+        }
+        .btn { 
+            padding: 12px 24px; 
+            border: none; 
+            color: #fff; 
+            font-weight: bold; 
+            cursor: pointer; 
+            border-radius: 4px; 
+            font-size: 11pt;
+        }
+        .btn-send { background: #002663; }
+        .btn-retour { background: #6c757d; }
+        .btn-clear { background: #6c757d; font-size: 9pt; padding: 4px 8px; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="wrapper" id="pdf-content">
+    <div class="page">
+        <div class="header">
+            <img src="SQ3.PNG" class="logo-sia" alt="SINGAPORE AIRLINES">
+        </div>
+
+        <div class="salutation">DEAR VALUED CUSTOMER,</div>
+        
+        <div class="intro-text">
+            PLEASE NOTE THAT THE FOLLOWING TERMS AND CONDITIONS WILL BE APPLICABLE FOR THIS CABIN UPGRADE:
+        </div>
+
+        <ul class="terms-list">
+            <li>Passengers who upgrade to Business Class or First Class may enjoy lounge access at the departing airport (where available).</li>
+            <li>Passengers will enjoy upgraded baggage allowance for the full one-way flight to destination.</li>
+            <li>Meals in the upgraded cabin class are subject to availability. Please check with our airport staff at the point of purchase.</li>
+            <li>The full upgrade rate is applicable for child and infant with seat. Infant without seat will not be charged.</li>
+            <li>Accrual of KrisFlyer miles, Elite miles and PPS Value will be based on the original class of service purchased before the cabin upgrade.</li>
+            <li>Change/no show/cancellation fees (where applicable) of the unused sector will follow the original ticket.</li>
+        </ul>
+
+        <div class="acknowledgment">
+            BY SIGNING BELOW, YOU ACKNOWLEDGE AND AGREE:
+            <ul class="sub-points">
+                <li>to the Terms and Conditions stated above; and</li>
+                <li>that your personal data will be processed by Singapore Airlines for the purposes of administering your upgrade request in accordance with the Singapore Airlines Privacy Policy.</li>
+            </ul>
+        </div>
+
+        <div class="form-fields">
+            <div class="field-row">
+                <div class="field-label">NAME :</div>
+                <input type="text" class="field-input">
+            </div>
+            
+            <div class="field-row">
+                <div class="field-label">DATE :</div>
+                <input type="date" class="field-input input-calendar" value="2026-04-21">
+            </div>
+
+            <div class="field-row" style="align-items: flex-start;">
+                <div class="field-label" style="margin-top: 8px;">SIGNATURE :</div>
+                <div style="display: flex; flex-direction: column;">
+                    <div class="signature-container">
+                        <input type="text" class="typed-signature" placeholder="Type name here...">
+                        <canvas id="signaturePad" class="signature-pad"></canvas>
+                        <div class="signature-line-overlay"></div>
+                    </div>
+                    <button class="btn btn-clear no-print" onclick="clearPad()">EFFACER SIGNATURE</button>
+                </div>
+            </div>
+
+            <div class="field-row admin-separator">
+                <div class="field-label" style="min-width: 60mm;">HANDLED BY (SIA STAFF NAME) :</div>
+                <input type="text" class="field-input">
+            </div>
+        </div>
+
+        <div class="footer-ref">V2_06Nov2024</div>
+    </div>
+</div>
+
+<div class="no-print-zone">
+    <button class="btn btn-retour" onclick="window.history.back()">RETOUR</button>
+    <button class="btn btn-send" onclick="saveAndSend()">ENREGISTRER & ENVOYER</button>
+</div>
+
+<script>
+    const canvas = document.getElementById('signaturePad');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    function setupCanvas() {
+        const ratio = window.devicePixelRatio || 1;
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        ctx.scale(ratio, ratio);
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#000';
+    }
+
+    window.onload = setupCanvas;
+
+    canvas.addEventListener('mousedown', (e) => { drawing = true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY); });
+    canvas.addEventListener('mousemove', (e) => { if(drawing) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } });
+    window.addEventListener('mouseup', () => drawing = false);
+
+    function clearPad() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+    function saveAndSend() {
+        const element = document.getElementById('pdf-content');
+        const opt = {
+            margin: 0,
+            filename: 'CABIN_UPGRADE_FORM.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save().then(() => {
+            alert("Form has been saved and is ready for submission.");
+        });
+    }
+</script>
+
+</body>
+</html>
