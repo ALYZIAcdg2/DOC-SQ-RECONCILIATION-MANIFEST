@@ -1,15 +1,15 @@
 import os
-import base64
-import resend
+import smtplib
+from email.message import EmailMessage
 
 from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
 app = FastAPI()
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -21,83 +21,76 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Clé Resend
-resend.api_key = os.environ.get("RESEND_API_KEY")
+GMAIL_FROM = "alyzia.cdg2@gmail.com"
+GMAIL_TO = "GSD_CDG@singaporeair.com.sg"
 
 
-# ========= ENVOI EMAIL =========
-async def envoyer_email(pdf_content, filename, subject, body):
+def envoyer_email_gmail(pdf_content, filename, subject, body):
+    gmail_password = os.environ.get("GMAIL_APP_PASSWORD")
 
-    params = {
-        "from": "ALYZIA DOCS <onboarding@resend.dev>",
-        "to": ["xavier.oliere@alyzia.com"],
-        "subject": subject,
-        "text": body,
-        "attachments": [
-            {
-                "filename": filename,
-                "content": base64.b64encode(pdf_content).decode()
-            }
-        ]
-    }
+    if not gmail_password:
+        raise Exception("GMAIL_APP_PASSWORD manquant dans Render")
 
-    response = resend.Emails.send(params)
+    msg = EmailMessage()
+    msg["From"] = GMAIL_FROM
+    msg["To"] = GMAIL_TO
+    msg["Subject"] = subject
 
-    print("RESEND RESPONSE :", response)
+    msg.set_content(body)
 
-    return True
+    msg.add_attachment(
+        pdf_content,
+        maintype="application",
+        subtype="pdf",
+        filename=filename
+    )
+
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+        smtp.login(GMAIL_FROM, gmail_password)
+        smtp.send_message(msg)
 
 
-# ========= PAGE ACCUEIL =========
 @app.get("/")
 async def home():
     return FileResponse("index.html")
 
 
-# ========= ROUTE ENVOI PDF =========
 @app.post("/send-pdf")
 async def send_pdf(
-        pdf: UploadFile = File(...),
-        filename: str = Form(...),
-        subject: str = Form(...),
-        body: str = Form(...)
+    pdf: UploadFile = File(...),
+    filename: str = Form(...),
+    subject: str = Form(...),
+    body: str = Form(...)
 ):
     try:
-
         pdf_content = await pdf.read()
 
         if not pdf_content:
             return JSONResponse(
                 status_code=400,
-                content={
-                    "status": "error",
-                    "message": "PDF vide"
-                }
+                content={"status": "error", "message": "PDF vide"}
             )
 
-        await envoyer_email(
+        envoyer_email_gmail(
             pdf_content,
             filename,
             subject,
             body
         )
 
-        return {
-            "status": "success"
-        }
+        return {"status": "success"}
 
     except Exception as e:
-
-        print("ERREUR :", e)
-
+        print("ERREUR EMAIL :", e)
         return JSONResponse(
             status_code=500,
-            content={
-                "status": "error",
-                "message": str(e)
-            }
+            content={"status": "error", "message": str(e)}
         )
 
 
-# ========= FICHIERS HTML =========
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
+
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
