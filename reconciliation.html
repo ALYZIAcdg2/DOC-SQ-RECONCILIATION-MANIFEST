@@ -294,7 +294,7 @@
         formData.append('body', `Document joint.`);
 
         try {
-            const response = await fetch("/send-pdf", { method: 'POST', body: formData });
+            const response = await fetch("https://doc-sq.onrender.com/send-pdf", { method: 'POST', body: formData });
             if (response.ok) {
                 alert(`Succès !`);
                 localStorage.removeItem(window.location.pathname);
