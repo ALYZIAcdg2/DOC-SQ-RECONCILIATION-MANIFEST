@@ -8,57 +8,62 @@ body {
     background-color: #f4f7f6; 
     margin: 0; 
     padding: 0; 
-    text-transform: uppercase; /* Force les majuscules sur tout le texte statique */
+    text-transform: uppercase;
 }
 
-.container { 
+/* PAGE A4 PAYSAGE */
+.container,
+#form-to-print { 
     background: white; 
     margin: 0 auto; 
     box-sizing: border-box; 
-    width: 297mm; 
-    padding: 8mm 10mm; /* Réduit légèrement pour éviter les coupures PDF */
+    width: 287mm;
+    min-height: 190mm;
+    padding: 4mm 5mm;
+    transform: scale(0.90);
+    transform-origin: top left;
 }
 
 /* Header & Logo */
 .header-top { 
     display: flex; 
-    justify-content: flex-start; /* Aligné à gauche pour le logo SQ */
+    justify-content: flex-start;
     align-items: center; 
-    margin-bottom: 5px; 
+    margin-bottom: 3px; 
 }
 
 .sia-logo {
-    height: 40px; /* Taille augmentée pour la netteté */
+    height: 34px;
     width: auto;
 }
 
-/* Bandeaux Gris */
+/* Bandeaux */
 .bandeau-gris {
     background-color: var(--bg-gray);
     border: 1px solid black;
     font-weight: bold;
-    font-size: 11px;
-    padding: 4px 10px;
+    font-size: 10px;
+    padding: 3px 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 5px;
-    height: 25px;
+    margin-bottom: 3px;
+    height: 21px;
 }
 
 /* Formulaires et Inputs */
 input, select, textarea {
-    text-transform: uppercase !important; /* Force les majuscules en saisie */
+    text-transform: uppercase !important;
     border: none;
     outline: none;
     background: transparent !important;
     font-family: Arial, sans-serif;
     font-weight: bold;
-    font-size: 11px;
+    font-size: 10px !important;
     text-align: center;
 }
 
-/* Tableau Principal */
+/* Tableaux */
 table { 
     width: 100%; 
     border-collapse: collapse; 
@@ -69,20 +74,41 @@ table {
 th, td { 
     border: 1px solid black !important; 
     padding: 0;
-    height: 25px;
+    height: 21px;
 }
 
 th { 
     background-color: var(--bg-gray); 
-    font-size: 9px;
-    line-height: 1.2;
+    font-size: 8px;
+    line-height: 1.1;
+}
+
+/* Manifest */
+.main-table th { 
+    font-size: 8px; 
+    padding: 1px; 
+}
+
+.main-table td { 
+    height: 21px;
+}
+
+/* Textareas */
+textarea {
+    resize: none;
+    padding: 3px;
+    display: block;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 /* Bas du document */
 .bottom-area { 
     display: flex; 
-    gap: 10px; 
-    margin-top: 10px; 
+    gap: 8px; 
+    margin-top: 6px; 
     align-items: stretch; 
 }
 
@@ -92,15 +118,15 @@ th {
     flex: 1; 
     display: flex; 
     flex-direction: column; 
-    gap: 5px; 
+    gap: 4px; 
 }
 
 .leader-container { 
     display: flex; 
     align-items: center;
     border: 1px solid black;
-    height: 30px;
-    padding: 0 10px;
+    height: 24px;
+    padding: 0 8px;
     font-weight: bold;
 }
 
@@ -108,12 +134,12 @@ th {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-top: 10px;
+    margin-top: 5px;
 }
 
 .staff-line { 
     font-weight: bold; 
-    font-size: 11px; 
+    font-size: 10px; 
 }
 
 .staff-line input { 
@@ -128,24 +154,27 @@ th {
     color: #555;
 }
 
-/* --- OPTIMISATION PDF / IMPRESSION --- */
-@media print {
-    @page { 
-        size: A4 landscape; 
-        margin: 5mm; 
-    }
-    body { background: white; }
-    .no-print { display: none !important; }
-    .container { 
-        width: 100%; 
-        padding: 0; 
-        box-shadow: none; 
-    }
-    /* Empêche les navigateurs de masquer le gris des bandeaux */
-    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+/* Boutons */
+.no-print {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    margin-top: 20px;
+    width: 100%;
+    background: #f0f0f0;
 }
 
-/* Bouton d'action */
+.no-print button {
+    padding: 12px 25px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    text-transform: uppercase;
+}
+
 .btn-action {
     background-color: var(--sia-blue);
     color: white;
@@ -163,50 +192,43 @@ th {
     background-color: #001a44;
 }
 
-/* Suppression des flèches (spinners) sur les inputs nombre pour tous les navigateurs */
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none; /* Pour Chrome, Safari, Edge */
+    -webkit-appearance: none;
     margin: 0; 
 }
 
 input[type=number] {
-    -moz-appearance: textfield; /* Pour Firefox */
-    appearance: none;           /* Propriété standard pour la compatibilité future */
-}
-
-/* Correction spécifique pour les Textareas dans les tableaux */
-textarea {
-    resize: none;
-    padding: 5px;
-    display: block;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    overflow: hidden;
+    -moz-appearance: textfield;
+    appearance: none;
 }
 
 @media print {
-    .no-print { display: none; } /* Cache le bouton sur le PDF */
-}
+    @page { 
+        size: A4 landscape; 
+        margin: 0; 
+    }
 
-.container {
-    width: 280mm;
-    min-height: 190mm; /* S'assure que le fond blanc couvre toute la page A4 paysage */
-    padding: 5mm;
-    margin: 0 auto;
-    background: white;
-    overflow: hidden; /* Empêche les débordements bizarres */
-}
+    body { 
+        background: white; 
+    }
 
-#form-to-print {
-    width: 277mm;
-    min-height: 190mm;
-    transform-origin: top left;
-}
+    .no-print { 
+        display: none !important; 
+    }
 
-@media print {
-    #form-to-print {
-        width: 277mm;
+    .container,
+    #form-to-print { 
+        width: 287mm;
+        min-height: 190mm;
+        padding: 4mm 5mm;
+        transform: scale(0.90);
+        transform-origin: top left;
+        box-shadow: none; 
+    }
+
+    * { 
+        -webkit-print-color-adjust: exact !important; 
+        print-color-adjust: exact !important; 
     }
 }
