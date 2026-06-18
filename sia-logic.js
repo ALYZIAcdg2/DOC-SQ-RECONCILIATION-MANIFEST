@@ -4,34 +4,32 @@
  */
 
 // --- CONFIGURATION ET ÉLÉMENTS ---
-var selectVol = document.getElementById('flight-select');
+var selectVol = document.getElementById('flight-select') || document.querySelector('.select-vol');
 const volDisplay = document.getElementById('vol-display');
-const dateInput = document.getElementById('date-input') || document.getElementById('dateMain');
+const dateInput = document.getElementById('date-input') || document.getElementById('dateMain') || document.querySelector('.input-date-calendar');
 const formToPrint = document.getElementById('form-to-print') || document.getElementById('pdf');
 const formTitle = document.title || "DOCUMENT_SIA";
 
 // --- 1. GESTION DES MAJUSCULES AUTOMATIQUES ---
 document.addEventListener('input', (e) => {
-    // Transforme en majuscules sauf pour les champs de type date
     if ((e.target.tagName === 'INPUT' && e.target.type !== 'date') || e.target.tagName === 'TEXTAREA') {
         e.target.value = e.target.value.toUpperCase();
     }
 });
 
-// --- 2. MISE À JOUR DU VOL (DANS LE BANDEAU GRIS) ---
+// --- 2. MISE À JOUR DU VOL ---
 if (selectVol && volDisplay) {
-    selectVol.addEventListener('change', (e) => { 
-        volDisplay.textContent = e.target.value; 
+    selectVol.addEventListener('change', (e) => {
+        volDisplay.textContent = e.target.value;
     });
 }
 
-// --- 3. SAUVEGARDE AUTOMATIQUE (BUFFER) ---
+// --- 3. SAUVEGARDE AUTOMATIQUE ---
 function autoSave() {
     const formData = {};
-    document.querySelectorAll('input, select, textarea').forEach(el => {
-        if (el.id) {
-            formData[el.id] = (el.type === 'checkbox' || el.type === 'radio') ? el.checked : el.value;
-        }
+    document.querySelectorAll('input, select, textarea').forEach((el, index) => {
+        const key = el.id || el.name || `field_${index}`;
+        formData[key] = (el.type === 'checkbox' || el.type === 'radio') ? el.checked : el.value;
     });
     localStorage.setItem(window.location.pathname, JSON.stringify(formData));
 }
@@ -41,45 +39,48 @@ function loadSavedData() {
     const resumeData = localStorage.getItem("RESUME_DATA");
     const autoSavedData = localStorage.getItem(window.location.pathname);
     const data = resumeData ? JSON.parse(resumeData) : (autoSavedData ? JSON.parse(autoSavedData) : null);
-    
+
     if (data) {
-        Object.keys(data).forEach(id => {
-            const el = document.getElementById(id);
-            if (el) {
-                if (el.type === 'checkbox' || el.type === 'radio') el.checked = data[id];
-                else el.value = data[id];
+        document.querySelectorAll('input, select, textarea').forEach((el, index) => {
+            const key = el.id || el.name || `field_${index}`;
+            if (data[key] !== undefined) {
+                if (el.type === 'checkbox' || el.type === 'radio') el.checked = data[key];
+                else el.value = data[key];
             }
         });
-        // Nettoyage si c'est une reprise de brouillon depuis l'accueil
+
         if (resumeData) localStorage.removeItem("RESUME_DATA");
-        // Update visuel du vol
         if (selectVol && volDisplay) volDisplay.textContent = selectVol.value;
     }
 }
 
-// --- 5. SAUVEGARDE D'UN BROUILLON OFFICIEL ---
+// --- 5. SAUVEGARDE BROUILLON ---
 function saveDraft() {
     const flight = selectVol ? selectVol.value : "REF";
     const date = dateInput ? dateInput.value : "SANS-DATE";
     const draftID = `DRAFT_${formTitle.replace(/\s+/g, '_')}_${flight}_${date}`;
 
     if (localStorage.getItem(draftID)) {
-        if (!confirm(`Un brouillon existe déjà.\nÉcraser la sauvegarde actuelle ?`)) return;
+        if (!confirm("Un brouillon existe déjà.\nÉcraser la sauvegarde actuelle ?")) return;
     }
-    
+
     const formData = {};
-    document.querySelectorAll('input, select, textarea').forEach(el => { if(el.id) formData[el.id] = el.value; });
-    
-    localStorage.setItem(draftID, JSON.stringify({ 
-        type: formTitle, 
-        url: window.location.pathname, 
-        date: new Date().toLocaleString(), 
-        data: formData 
+    document.querySelectorAll('input, select, textarea').forEach((el, index) => {
+        const key = el.id || el.name || `field_${index}`;
+        formData[key] = (el.type === 'checkbox' || el.type === 'radio') ? el.checked : el.value;
+    });
+
+    localStorage.setItem(draftID, JSON.stringify({
+        type: formTitle,
+        url: window.location.pathname,
+        date: new Date().toLocaleString(),
+        data: formData
     }));
+
     alert("Brouillon sauvegardé !");
 }
 
-// --- 6. ENVOI DU DOCUMENT (GENERATION PDF + SERVEUR) ---
+// --- 6. ENVOI PDF + MAIL ---
 async function saveAndSend() {
     if (!formToPrint) {
         alert("Erreur: Conteneur d'impression non trouvé.");
@@ -89,63 +90,68 @@ async function saveAndSend() {
     const flight = selectVol ? selectVol.value : "SIA";
     const dateStr = dateInput ? dateInput.value : "SANS-DATE";
     const fileName = `${formTitle.replace(/\s+/g, '_')}_${flight}_${dateStr}.pdf`;
-
     const isManifest = document.title.includes("BAGAGE MANIFEST");
 
-const opt = { 
-    margin: isManifest ? 0 : [4, 4, 4, 4],
-    filename: fileName, 
-    image: { type: 'jpeg', quality: 1 }, 
-    html2canvas: { 
-        scale: 2,
-        useCORS: true,
-        scrollX: 0,
-        scrollY: 0,
-        windowWidth: formToPrint.scrollWidth,
-        windowHeight: formToPrint.scrollHeight
-    }, 
-    jsPDF: { 
-        unit: 'mm',
-        format: 'a4',
-        orientation: isManifest ? 'landscape' : 'portrait'
-    },
-    pagebreak: isManifest
-        ? { mode: ['css', 'legacy'] }
-        : { mode: ['avoid-all', 'css', 'legacy'] }
-};
+    const opt = {
+        margin: isManifest ? [2, 2, 2, 2] : [4, 4, 4, 4],
+        filename: fileName,
+        image: {
+            type: 'jpeg',
+            quality: 1
+        },
+        html2canvas: {
+            scale: isManifest ? 1.5 : 2,
+            useCORS: true,
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: formToPrint.scrollWidth,
+            windowHeight: formToPrint.scrollHeight
+        },
+        jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: isManifest ? 'landscape' : 'portrait'
+        },
+        pagebreak: isManifest
+            ? { mode: ['css', 'legacy'] }
+            : { mode: ['avoid-all', 'css', 'legacy'] }
+    };
 
     try {
-        // 1. Sauvegarde locale pour l'utilisateur
         html2pdf().set(opt).from(formToPrint).save();
-        
-        // 2. Génération du Blob pour le serveur
+
         const pdfBlob = await html2pdf().set(opt).from(formToPrint).output('blob');
+
         const formData = new FormData();
         formData.append('pdf', pdfBlob, fileName);
         formData.append('filename', fileName);
         formData.append('subject', `${formTitle} - ${flight} - ${dateStr}`);
         formData.append('body', `Veuillez trouver ci-joint le document ${formTitle}.`);
 
-        // 3. Envoi au serveur
         const response = await fetch("https://doc-sq.onrender.com/send-pdf", {
-    method: 'POST',
-    body: formData
-});
-        
+            method: 'POST',
+            body: formData
+        });
+
+        const responseText = await response.text();
+        console.log("SEND PDF STATUS:", response.status);
+        console.log("SEND PDF RESPONSE:", responseText);
+
         if (response.ok) {
-            alert(`Succès : Document envoyé !`);
-            // Nettoyage des sauvegardes temporaires
+            alert("Succès : Document envoyé !");
             localStorage.removeItem(window.location.pathname);
+
             const draftID = `DRAFT_${formTitle.replace(/\s+/g, '_')}_${flight}_${dateStr}`;
             localStorage.removeItem(draftID);
-            // Retour à l'accueil
+
             window.location.href = 'index.html';
-        } else { 
-            alert("Erreur lors de l'envoi au serveur mail."); 
+        } else {
+            alert("Erreur mail : " + response.status + "\n" + responseText);
         }
-    } catch (e) { 
+
+    } catch (e) {
         console.error(e);
-        alert("Erreur technique lors de la génération ou de l'envoi."); 
+        alert("Erreur technique lors de la génération ou de l'envoi.");
     }
 }
 
