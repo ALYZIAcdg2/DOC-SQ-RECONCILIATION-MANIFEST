@@ -4,7 +4,7 @@
  */
 
 // --- CONFIGURATION ET ÉLÉMENTS ---
-const selectVol = document.getElementById('flight-select');
+var selectVol = document.getElementById('flight-select');
 const volDisplay = document.getElementById('vol-display');
 const dateInput = document.getElementById('date-input') || document.getElementById('dateMain');
 const formToPrint = document.getElementById('form-to-print') || document.getElementById('pdf');
@@ -116,7 +116,10 @@ async function saveAndSend() {
         formData.append('body', `Veuillez trouver ci-joint le document ${formTitle}.`);
 
         // 3. Envoi au serveur
-        const response = await fetch("/send-pdf", { method: 'POST', body: formData });
+        const response = await fetch("https://doc-sq.onrender.com/send-pdf", {
+    method: 'POST',
+    body: formData
+});
         
         if (response.ok) {
             alert(`Succès : Document envoyé !`);
