@@ -23,7 +23,7 @@ app.add_middleware(
 
 MAIL_FROM = "alyzia.cdg2@gmail.com"
 MAIL_FROM_NAME = "ALYZIA DOCS SQ"
-MAIL_TO = "GSD_CDG@singaporeair.com.sg"
+MAIL_TO = "xavier.oliere@alyzia.com"
 
 
 async def envoyer_email_brevo_api(pdf_content, filename, subject, body):
