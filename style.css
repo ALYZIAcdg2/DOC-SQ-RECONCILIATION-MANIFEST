@@ -223,12 +223,14 @@ input[type=number] {
     }
 
     .container,
-    #form-to-print {
-        width: 257mm;
-        min-height: 180mm;
-        padding: 2mm;
-        box-shadow: none;
-    }
+#form-to-print {
+    width: 287mm;
+    min-height: 190mm;
+    padding: 2mm 4mm;
+    margin: 0;
+    background: white;
+    box-sizing: border-box;
+}
 
     * {
         -webkit-print-color-adjust: exact !important;
