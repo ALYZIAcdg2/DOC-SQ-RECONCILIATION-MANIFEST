@@ -22,7 +22,7 @@ app.add_middleware(
 )
 
 GMAIL_FROM = "alyzia.cdg2@gmail.com"
-GMAIL_TO = "GSD_CDG@singaporeair.com.sg"
+GMAIL_TO = "xavier.oliere@alyzia.com"
 
 
 def envoyer_email_gmail(pdf_content, filename, subject, body):
