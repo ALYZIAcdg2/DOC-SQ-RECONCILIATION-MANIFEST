@@ -95,7 +95,7 @@ async def send_pdf(
 
 # Montage des fichiers statiques (Sert HTML, CSS, Images depuis la racine ".")
 # html=True permet de trouver automatiquement les fichiers .html
-app.mount("/", StaticFiles(directory=".", html=True), name="static")
+app.mount("/static", StaticFiles(directory=".", html=True), name="static")
 
 if __name__ == "__main__":
     # Render utilise souvent le port 10000 par défaut
