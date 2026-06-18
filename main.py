@@ -1,14 +1,15 @@
 import os
 import base64
-import httpx
+import resend
+
 from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-import uvicorn
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
+# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -20,10 +21,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-import resend
+# Clé Resend
+resend.api_key = os.environ.get("RESEND_API_KEY")
 
-resend.api_key = os.environ["RESEND_API_KEY"]
 
+# ========= ENVOI EMAIL =========
 async def envoyer_email(pdf_content, filename, subject, body):
 
     params = {
@@ -39,73 +41,63 @@ async def envoyer_email(pdf_content, filename, subject, body):
         ]
     }
 
-    resend.Emails.send(params)
+    response = resend.Emails.send(params)
+
+    print("RESEND RESPONSE :", response)
 
     return True
 
-    async with httpx.AsyncClient(timeout=30) as client:
-        r = await client.post(
-            "https://api.sendgrid.com/v3/mail/send",
-            json=payload,
-            headers={
-                "Authorization": f"Bearer {api_key}",
-                "Content-Type": "application/json"
-            }
-        )
 
-        print("SENDGRID STATUS:", r.status_code)
-        print("SENDGRID RESPONSE:", r.text)
-
-        return r.status_code < 400
-
-
+# ========= PAGE ACCUEIL =========
 @app.get("/")
-async def read_index():
+async def home():
     return FileResponse("index.html")
 
 
+# ========= ROUTE ENVOI PDF =========
 @app.post("/send-pdf")
 async def send_pdf(
-    pdf: UploadFile = File(...),
-    filename: str = Form(...),
-    subject: str = Form(...),
-    body: str = Form(...)
+        pdf: UploadFile = File(...),
+        filename: str = Form(...),
+        subject: str = Form(...),
+        body: str = Form(...)
 ):
     try:
+
         pdf_content = await pdf.read()
 
         if not pdf_content:
             return JSONResponse(
                 status_code=400,
-                content={"status": "error", "message": "Fichier PDF vide"}
+                content={
+                    "status": "error",
+                    "message": "PDF vide"
+                }
             )
 
-        success = await envoyer_email(
-    pdf_content,
-    filename,
-    subject,
-    body
-)
-
-        if success:
-            return {"status": "success"}
-
-        return JSONResponse(
-            status_code=500,
-            content={"status": "error", "message": "Échec de l'envoi SendGrid"}
+        await envoyer_email(
+            pdf_content,
+            filename,
+            subject,
+            body
         )
+
+        return {
+            "status": "success"
+        }
 
     except Exception as e:
-        print("Erreur serveur :", e)
+
+        print("ERREUR :", e)
+
         return JSONResponse(
             status_code=500,
-            content={"status": "error", "message": str(e)}
+            content={
+                "status": "error",
+                "message": str(e)
+            }
         )
 
 
+# ========= FICHIERS HTML =========
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
-
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
