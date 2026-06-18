@@ -90,8 +90,10 @@ async function saveAndSend() {
     const dateStr = dateInput ? dateInput.value : "SANS-DATE";
     const fileName = `${formTitle.replace(/\s+/g, '_')}_${flight}_${dateStr}.pdf`;
 
-    const opt = { 
-    margin: [4, 4, 4, 4],
+    const isManifest = document.title.includes("BAGAGE MANIFEST");
+
+const opt = { 
+    margin: isManifest ? 0 : [4, 4, 4, 4],
     filename: fileName, 
     image: { type: 'jpeg', quality: 1 }, 
     html2canvas: { 
@@ -105,12 +107,12 @@ async function saveAndSend() {
     jsPDF: { 
         unit: 'mm',
         format: 'a4',
-        orientation: document.title.includes("BAGAGE MANIFEST") ? 'landscape' : 'portrait'
+        orientation: isManifest ? 'landscape' : 'portrait'
     },
-    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+    pagebreak: isManifest
+        ? { mode: ['css', 'legacy'] }
+        : { mode: ['avoid-all', 'css', 'legacy'] }
 };
-
-
 
     try {
         // 1. Sauvegarde locale pour l'utilisateur
