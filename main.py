@@ -20,36 +20,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-async def envoyer_email_sendgrid(pdf_content, filename, subject, body):
-    api_key = os.environ.get("SENDGRID_API_KEY")
+import resend
 
-    if not api_key:
-        print("Erreur : SENDGRID_API_KEY manquante sur Render.")
-        return False
+resend.api_key = os.environ["RESEND_API_KEY"]
 
-    encoded_pdf = base64.b64encode(pdf_content).decode()
+async def envoyer_email(pdf_content, filename, subject, body):
 
-    payload = {
-        "personalizations": [
-            {"to": [{"email": "xavier.oliere@alyzia.com"}]}
-        ],
-        "from": {
-            "email": "alyzia.cdg2@gmail.com",
-            "name": "ALYZIA DOCS SQ"
-        },
+    params = {
+        "from": "ALYZIA DOCS <onboarding@resend.dev>",
+        "to": ["xavier.oliere@alyzia.com"],
         "subject": subject,
-        "content": [
-            {"type": "text/plain", "value": body}
-        ],
+        "text": body,
         "attachments": [
             {
-                "content": encoded_pdf,
                 "filename": filename,
-                "type": "application/pdf",
-                "disposition": "attachment"
+                "content": base64.b64encode(pdf_content).decode()
             }
         ]
     }
+
+    resend.Emails.send(params)
+
+    return True
 
     async with httpx.AsyncClient(timeout=30) as client:
         r = await client.post(
@@ -88,12 +80,12 @@ async def send_pdf(
                 content={"status": "error", "message": "Fichier PDF vide"}
             )
 
-        success = await envoyer_email_sendgrid(
-            pdf_content,
-            filename,
-            subject,
-            body
-        )
+        success = await envoyer_email(
+    pdf_content,
+    filename,
+    subject,
+    body
+)
 
         if success:
             return {"status": "success"}
