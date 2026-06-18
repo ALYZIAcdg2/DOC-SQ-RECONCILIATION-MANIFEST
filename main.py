@@ -45,9 +45,12 @@ def envoyer_email_gmail(pdf_content, filename, subject, body):
         filename=filename
     )
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        smtp.login(GMAIL_FROM, gmail_password)
-        smtp.send_message(msg)
+    with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as smtp:
+    smtp.ehlo()
+    smtp.starttls()
+    smtp.ehlo()
+    smtp.login(GMAIL_FROM, gmail_password)
+    smtp.send_message(msg)
 
 
 @app.get("/")
