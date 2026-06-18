@@ -58,8 +58,8 @@ async def envoyer_email_sendgrid(pdf_content, filename, subject, body):
             }
         )
         print("SENDGRID STATUS:", r.status_code)
-print("SENDGRID RESPONSE:", r.text)
-return r.status_code < 400
+        print("SENDGRID RESPONSE:", r.text)
+        return r.status_code < 400
 
 # --- ROUTES ---
 
