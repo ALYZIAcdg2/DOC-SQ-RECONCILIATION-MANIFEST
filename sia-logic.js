@@ -92,31 +92,36 @@ async function saveAndSend() {
     const fileName = `${formTitle.replace(/\s+/g, '_')}_${flight}_${dateStr}.pdf`;
     const isManifest = document.title.includes("BAGAGE MANIFEST");
 
-    const opt = {
-        margin: isManifest ? [2, 2, 2, 2] : [4, 4, 4, 4],
-        filename: fileName,
-        image: {
-            type: 'jpeg',
-            quality: 1
-        },
-        html2canvas: {
-            scale: isManifest ? 1.5 : 2,
-            useCORS: true,
-            scrollX: 0,
-            scrollY: 0,
-            windowWidth: formToPrint.scrollWidth,
-            windowHeight: formToPrint.scrollHeight
-        },
-        jsPDF: {
-            unit: 'mm',
-            format: 'a4',
-            orientation: isManifest ? 'landscape' : 'portrait'
-        },
-        pagebreak: isManifest
-            ? { mode: ['css', 'legacy'] }
-            : { mode: ['avoid-all', 'css', 'legacy'] }
-    };
-
+const opt = {
+    margin: 0,
+    filename: fileName,
+    image: { type: 'jpeg', quality: 1 },
+    html2canvas: {
+        scale: isManifest ? 1.4 : 2,
+        useCORS: true,
+        scrollX: 0,
+        scrollY: 0,
+        x: 0,
+        y: 0,
+        onclone: function (clonedDoc) {
+            const clonedForm = clonedDoc.getElementById('form-to-print');
+            if (clonedForm && isManifest) {
+                clonedForm.style.position = 'absolute';
+                clonedForm.style.top = '0';
+                clonedForm.style.left = '0';
+                clonedForm.style.margin = '0';
+            }
+            clonedDoc.body.style.margin = '0';
+            clonedDoc.body.style.padding = '0';
+        }
+    },
+    jsPDF: {
+        unit: 'mm',
+        format: 'a4',
+        orientation: isManifest ? 'landscape' : 'portrait'
+    },
+    pagebreak: { mode: ['css', 'legacy'] }
+};
     try {
         html2pdf().set(opt).from(formToPrint).save();
 
