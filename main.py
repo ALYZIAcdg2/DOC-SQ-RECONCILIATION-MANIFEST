@@ -57,7 +57,9 @@ async def envoyer_email_sendgrid(pdf_content, filename, subject, body):
                 "Content-Type": "application/json"
             }
         )
-        return r.status_code < 400
+        print("SENDGRID STATUS:", r.status_code)
+print("SENDGRID RESPONSE:", r.text)
+return r.status_code < 400
 
 # --- ROUTES ---
 
