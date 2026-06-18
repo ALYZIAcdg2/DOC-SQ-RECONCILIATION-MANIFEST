@@ -74,18 +74,27 @@ async def send_pdf(
                 content={"status": "error", "message": "PDF vide"}
             )
 
-        envoyer_email_brevo(pdf_content, filename, subject, body)
+        envoyer_email_brevo(
+            pdf_content,
+            filename,
+            subject,
+            body
+        )
 
         return {"status": "success"}
 
-except Exception as e:
-    import traceback
-    print("ERREUR EMAIL :", repr(e))
-    traceback.print_exc()
-    return JSONResponse(
-        status_code=500,
-        content={"status": "error", "message": str(e)}
-    )
+    except Exception as e:
+        import traceback
+        print("ERREUR EMAIL :", repr(e))
+        traceback.print_exc()
+
+        return JSONResponse(
+            status_code=500,
+            content={
+                "status": "error",
+                "message": str(e)
+            }
+        )
 
 
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
