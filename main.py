@@ -1,6 +1,6 @@
 import os
-import smtplib
-from email.message import EmailMessage
+import base64
+import httpx
 
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.staticfiles import StaticFiles
@@ -22,35 +22,54 @@ app.add_middleware(
 )
 
 MAIL_FROM = "alyzia.cdg2@gmail.com"
-MAIL_TO = "xavier.oliere@alyzia.com"
+MAIL_FROM_NAME = "ALYZIA DOCS SQ"
+MAIL_TO = "GSD_CDG@singaporeair.com.sg"
 
 
-def envoyer_email_brevo(pdf_content, filename, subject, body):
-    brevo_login = os.environ.get("BREVO_LOGIN")
-    brevo_password = os.environ.get("BREVO_PASSWORD")
+async def envoyer_email_brevo_api(pdf_content, filename, subject, body):
+    api_key = os.environ.get("BREVO_API_KEY")
 
-    if not brevo_login or not brevo_password:
-        raise Exception("BREVO_LOGIN ou BREVO_PASSWORD manquant dans Render")
+    if not api_key:
+        raise Exception("BREVO_API_KEY manquant dans Render")
 
-    msg = EmailMessage()
-    msg["From"] = MAIL_FROM
-    msg["To"] = MAIL_TO
-    msg["Subject"] = subject
-    msg.set_content(body)
+    payload = {
+        "sender": {
+            "name": MAIL_FROM_NAME,
+            "email": MAIL_FROM
+        },
+        "to": [
+            {
+                "email": MAIL_TO
+            }
+        ],
+        "subject": subject,
+        "textContent": body,
+        "attachment": [
+            {
+                "name": filename,
+                "content": base64.b64encode(pdf_content).decode("utf-8")
+            }
+        ]
+    }
 
-    msg.add_attachment(
-        pdf_content,
-        maintype="application",
-        subtype="pdf",
-        filename=filename
-    )
+    async with httpx.AsyncClient(timeout=60) as client:
+        response = await client.post(
+            "https://api.brevo.com/v3/smtp/email",
+            json=payload,
+            headers={
+                "api-key": api_key,
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        )
 
-    with smtplib.SMTP("smtp-relay.brevo.com", 587, timeout=30) as smtp:
-        smtp.ehlo()
-        smtp.starttls()
-        smtp.ehlo()
-        smtp.login(brevo_login, brevo_password)
-        smtp.send_message(msg)
+    print("BREVO API STATUS:", response.status_code)
+    print("BREVO API RESPONSE:", response.text)
+
+    if response.status_code >= 400:
+        raise Exception(f"Brevo API error {response.status_code}: {response.text}")
+
+    return True
 
 
 @app.get("/")
@@ -74,7 +93,7 @@ async def send_pdf(
                 content={"status": "error", "message": "PDF vide"}
             )
 
-        envoyer_email_brevo(
+        await envoyer_email_brevo_api(
             pdf_content,
             filename,
             subject,
@@ -87,13 +106,9 @@ async def send_pdf(
         import traceback
         print("ERREUR EMAIL :", repr(e))
         traceback.print_exc()
-
         return JSONResponse(
             status_code=500,
-            content={
-                "status": "error",
-                "message": str(e)
-            }
+            content={"status": "error", "message": str(e)}
         )
 
 
