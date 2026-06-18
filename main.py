@@ -45,7 +45,7 @@ def envoyer_email_gmail(pdf_content, filename, subject, body):
         filename=filename
     )
 
-    with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as smtp:
+with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as smtp:
     smtp.ehlo()
     smtp.starttls()
     smtp.ehlo()
