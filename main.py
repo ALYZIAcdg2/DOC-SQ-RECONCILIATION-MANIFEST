@@ -35,7 +35,6 @@ def envoyer_email_gmail(pdf_content, filename, subject, body):
     msg["From"] = GMAIL_FROM
     msg["To"] = GMAIL_TO
     msg["Subject"] = subject
-
     msg.set_content(body)
 
     msg.add_attachment(
@@ -45,12 +44,12 @@ def envoyer_email_gmail(pdf_content, filename, subject, body):
         filename=filename
     )
 
-with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as smtp:
-    smtp.ehlo()
-    smtp.starttls()
-    smtp.ehlo()
-    smtp.login(GMAIL_FROM, gmail_password)
-    smtp.send_message(msg)
+    with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as smtp:
+        smtp.ehlo()
+        smtp.starttls()
+        smtp.ehlo()
+        smtp.login(GMAIL_FROM, gmail_password)
+        smtp.send_message(msg)
 
 
 @app.get("/")
@@ -74,12 +73,7 @@ async def send_pdf(
                 content={"status": "error", "message": "PDF vide"}
             )
 
-        envoyer_email_gmail(
-            pdf_content,
-            filename,
-            subject,
-            body
-        )
+        envoyer_email_gmail(pdf_content, filename, subject, body)
 
         return {"status": "success"}
 
