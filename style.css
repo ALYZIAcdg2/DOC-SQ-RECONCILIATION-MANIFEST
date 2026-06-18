@@ -198,3 +198,15 @@ textarea {
     background: white;
     overflow: hidden; /* Empêche les débordements bizarres */
 }
+
+#form-to-print {
+    width: 277mm;
+    min-height: 190mm;
+    transform-origin: top left;
+}
+
+@media print {
+    #form-to-print {
+        width: 277mm;
+    }
+}
