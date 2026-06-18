@@ -1,35 +1,34 @@
+```css
 :root {
     --bg-gray: #e6e6e6;
     --sia-blue: #002663;
 }
 
-body { 
-    font-family: Arial, sans-serif; 
-    background-color: #f4f7f6; 
-    margin: 0; 
-    padding: 0; 
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 0;
     text-transform: uppercase;
 }
 
-/* PAGE A4 PAYSAGE */
+/* PAGE */
 .container,
-#form-to-print { 
-    background: white; 
-    margin: 0 auto; 
-    box-sizing: border-box; 
-    width: 287mm;
-    min-height: 190mm;
-    padding: 4mm 5mm;
-    transform: scale(0.90);
-    transform-origin: top left;
+#form-to-print {
+    background: white;
+    margin: 0 auto;
+    box-sizing: border-box;
+    width: 270mm;
+    min-height: 185mm;
+    padding: 3mm 4mm;
 }
 
 /* Header & Logo */
-.header-top { 
-    display: flex; 
+.header-top {
+    display: flex;
     justify-content: flex-start;
-    align-items: center; 
-    margin-bottom: 3px; 
+    align-items: center;
+    margin-bottom: 3px;
 }
 
 .sia-logo {
@@ -51,8 +50,10 @@ body {
     height: 21px;
 }
 
-/* Formulaires et Inputs */
-input, select, textarea {
+/* Inputs */
+input,
+select,
+textarea {
     text-transform: uppercase !important;
     border: none;
     outline: none;
@@ -63,37 +64,37 @@ input, select, textarea {
     text-align: center;
 }
 
-/* Tableaux */
-table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    table-layout: fixed; 
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
     border: 1px solid black;
 }
 
-th, td { 
-    border: 1px solid black !important; 
+th,
+td {
+    border: 1px solid black !important;
     padding: 0;
-    height: 21px;
 }
 
-th { 
-    background-color: var(--bg-gray); 
+th {
+    background-color: var(--bg-gray);
     font-size: 8px;
     line-height: 1.1;
 }
 
 /* Manifest */
-.main-table th { 
-    font-size: 8px; 
-    padding: 1px; 
+.main-table th {
+    font-size: 8px;
+    padding: 1px;
 }
 
-.main-table td { 
-    height: 21px;
+.main-table td {
+    height: 18px;
 }
 
-/* Textareas */
+/* Textarea */
 textarea {
     resize: none;
     padding: 3px;
@@ -104,25 +105,27 @@ textarea {
     overflow: hidden;
 }
 
-/* Bas du document */
-.bottom-area { 
-    display: flex; 
-    gap: 8px; 
-    margin-top: 6px; 
-    align-items: stretch; 
+/* Bottom */
+.bottom-area {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+    align-items: stretch;
 }
 
-.reconcil-table { width: 30%; }
-
-.middle-col { 
-    flex: 1; 
-    display: flex; 
-    flex-direction: column; 
-    gap: 4px; 
+.reconcil-table {
+    width: 30%;
 }
 
-.leader-container { 
-    display: flex; 
+.middle-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.leader-container {
+    display: flex;
     align-items: center;
     border: 1px solid black;
     height: 24px;
@@ -130,27 +133,27 @@ textarea {
     font-weight: bold;
 }
 
-.footer-wrap { 
+.footer-wrap {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     margin-top: 5px;
 }
 
-.staff-line { 
-    font-weight: bold; 
-    font-size: 10px; 
+.staff-line {
+    font-weight: bold;
+    font-size: 10px;
 }
 
-.staff-line input { 
-    border-bottom: 1px solid black !important; 
-    width: 200px; 
+.staff-line input {
+    border-bottom: 1px solid black !important;
+    width: 200px;
     text-align: left;
 }
 
-.rev-info { 
-    font-size: 7px; 
-    font-weight: bold; 
+.rev-info {
+    font-size: 7px;
+    font-weight: bold;
     color: #555;
 }
 
@@ -192,10 +195,11 @@ textarea {
     background-color: #001a44;
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
+/* Suppression des flèches */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
     -webkit-appearance: none;
-    margin: 0; 
+    margin: 0;
 }
 
 input[type=number] {
@@ -203,32 +207,33 @@ input[type=number] {
     appearance: none;
 }
 
+/* Impression */
 @media print {
-    @page { 
-        size: A4 landscape; 
-        margin: 0; 
+
+    @page {
+        size: A4 landscape;
+        margin: 0;
     }
 
-    body { 
-        background: white; 
+    body {
+        background: white;
     }
 
-    .no-print { 
-        display: none !important; 
+    .no-print {
+        display: none !important;
     }
 
     .container,
-    #form-to-print { 
-        width: 287mm;
-        min-height: 190mm;
-        padding: 4mm 5mm;
-        transform: scale(0.90);
-        transform-origin: top left;
-        box-shadow: none; 
+    #form-to-print {
+        width: 270mm;
+        min-height: 185mm;
+        padding: 3mm 4mm;
+        box-shadow: none;
     }
 
-    * { 
-        -webkit-print-color-adjust: exact !important; 
-        print-color-adjust: exact !important; 
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 }
+```
