@@ -21,19 +21,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-GMAIL_FROM = "alyzia.cdg2@gmail.com"
-GMAIL_TO = "xavier.oliere@alyzia.com"
+MAIL_FROM = "alyzia.cdg2@gmail.com"
+MAIL_TO = "xavier.oliere@alyzia.com"
 
 
-def envoyer_email_gmail(pdf_content, filename, subject, body):
-    gmail_password = os.environ.get("GMAIL_APP_PASSWORD")
+def envoyer_email_brevo(pdf_content, filename, subject, body):
+    brevo_login = os.environ.get("BREVO_LOGIN")
+    brevo_password = os.environ.get("BREVO_PASSWORD")
 
-    if not gmail_password:
-        raise Exception("GMAIL_APP_PASSWORD manquant dans Render")
+    if not brevo_login or not brevo_password:
+        raise Exception("BREVO_LOGIN ou BREVO_PASSWORD manquant dans Render")
 
     msg = EmailMessage()
-    msg["From"] = GMAIL_FROM
-    msg["To"] = GMAIL_TO
+    msg["From"] = MAIL_FROM
+    msg["To"] = MAIL_TO
     msg["Subject"] = subject
     msg.set_content(body)
 
@@ -44,11 +45,11 @@ def envoyer_email_gmail(pdf_content, filename, subject, body):
         filename=filename
     )
 
-    with smtplib.SMTP("smtp.gmail.com", 587, timeout=30) as smtp:
+    with smtplib.SMTP("smtp-relay.brevo.com", 587, timeout=30) as smtp:
         smtp.ehlo()
         smtp.starttls()
         smtp.ehlo()
-        smtp.login(GMAIL_FROM, gmail_password)
+        smtp.login(brevo_login, brevo_password)
         smtp.send_message(msg)
 
 
@@ -73,7 +74,7 @@ async def send_pdf(
                 content={"status": "error", "message": "PDF vide"}
             )
 
-        envoyer_email_gmail(pdf_content, filename, subject, body)
+        envoyer_email_brevo(pdf_content, filename, subject, body)
 
         return {"status": "success"}
 
