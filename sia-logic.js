@@ -91,20 +91,26 @@ async function saveAndSend() {
     const fileName = `${formTitle.replace(/\s+/g, '_')}_${flight}_${dateStr}.pdf`;
 
     const opt = { 
-        margin: 0, 
-        filename: fileName, 
-        image: { type: 'jpeg', quality: 0.98 }, 
-        html2canvas: { scale: 2, useCORS: true }, 
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } 
-    };
+    margin: [4, 4, 4, 4],
+    filename: fileName, 
+    image: { type: 'jpeg', quality: 1 }, 
+    html2canvas: { 
+        scale: 2,
+        useCORS: true,
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: formToPrint.scrollWidth,
+        windowHeight: formToPrint.scrollHeight
+    }, 
+    jsPDF: { 
+        unit: 'mm',
+        format: 'a4',
+        orientation: document.title.includes("BAGAGE MANIFEST") ? 'landscape' : 'portrait'
+    },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+};
 
-    // Note: On vérifie si portrait est nécessaire (pour certains formulaires comme UM Waiver)
-    // Manifest = toujours A4 paysage
-if (document.title.includes("BAGAGE MANIFEST")) {
-    opt.jsPDF.orientation = "landscape";
-} else if (window.innerHeight > window.innerWidth) {
-    opt.jsPDF.orientation = "portrait";
-}
+
 
     try {
         // 1. Sauvegarde locale pour l'utilisateur
