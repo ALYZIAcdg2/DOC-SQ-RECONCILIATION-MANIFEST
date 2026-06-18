@@ -4,9 +4,22 @@ import httpx
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 app = FastAPI()
+
+# --- CORS POUR AUTORISER GITHUB PAGES ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://alyziacdg2.github.io",
+        "https://doc-sq.onrender.com"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # --- FONCTION D'ENVOI VIA SENDGRID ---
 async def envoyer_email_sendgrid(pdf_content, filename, subject, body):
