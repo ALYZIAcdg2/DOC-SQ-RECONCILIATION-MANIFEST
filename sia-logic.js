@@ -99,9 +99,12 @@ async function saveAndSend() {
     };
 
     // Note: On vérifie si portrait est nécessaire (pour certains formulaires comme UM Waiver)
-    if (window.innerHeight > window.innerWidth) {
-        opt.jsPDF.orientation = 'portrait';
-    }
+    // Manifest = toujours A4 paysage
+if (document.title.includes("BAGAGE MANIFEST")) {
+    opt.jsPDF.orientation = "landscape";
+} else if (window.innerHeight > window.innerWidth) {
+    opt.jsPDF.orientation = "portrait";
+}
 
     try {
         // 1. Sauvegarde locale pour l'utilisateur
