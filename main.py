@@ -78,12 +78,14 @@ async def send_pdf(
 
         return {"status": "success"}
 
-    except Exception as e:
-        print("ERREUR EMAIL :", e)
-        return JSONResponse(
-            status_code=500,
-            content={"status": "error", "message": str(e)}
-        )
+except Exception as e:
+    import traceback
+    print("ERREUR EMAIL :", repr(e))
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=500,
+        content={"status": "error", "message": str(e)}
+    )
 
 
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
