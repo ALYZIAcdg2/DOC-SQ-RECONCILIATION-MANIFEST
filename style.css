@@ -225,7 +225,6 @@ input[type=number] {
     .container,
 #form-to-print {
     width: 287mm;
-    min-height: 190mm;
     padding: 2mm 4mm;
     margin: 0;
     background: white;
