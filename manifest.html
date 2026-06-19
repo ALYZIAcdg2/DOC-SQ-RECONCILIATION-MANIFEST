@@ -290,6 +290,46 @@ body {
     margin-top: 0 !important;
     padding: 15px !important;
 }
+        /* AFFICHAGE ÉCRAN COMME EXCESS */
+@media screen {
+    body {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: #f0f0f0;
+    }
+
+    #form-to-print.container {
+        width: 282mm;
+        min-height: 190mm;
+        padding: 2mm 5mm;
+        margin: 0 auto;
+        background: white;
+        box-sizing: border-box;
+    }
+
+    .sia-logo {
+        height: 45px;
+        margin-bottom: 2px;
+    }
+
+    .main-table td {
+        height: 28px;
+    }
+
+    .retag-table td {
+        height: 26px;
+    }
+
+    .footer-wrap {
+        margin-top: 8px;
+    }
+
+    .no-print {
+        margin-top: 0 !important;
+        padding: 15px !important;
+    }
+}
     </style>
 </head>
 
