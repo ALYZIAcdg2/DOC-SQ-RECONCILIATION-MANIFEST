@@ -262,6 +262,34 @@
                 print-color-adjust: exact !important;
             }
         }
+
+        /* AFFICHAGE ÉCRAN COMME EXCESS - SANS GRAND SCROLL */
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f0f0f0;
+}
+
+#form-to-print.container {
+    width: 282mm;
+    min-height: auto !important;
+    padding: 2mm 5mm !important;
+    margin: 0 auto !important;
+    background: white;
+    box-sizing: border-box;
+}
+
+.no-print {
+    margin-top: 0 !important;
+    padding: 15px !important;
+}
     </style>
 </head>
 
